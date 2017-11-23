@@ -2,8 +2,10 @@
 #include "Card.h"
 #include "Player.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 /*
  여유 있으면 split도 구현
@@ -12,19 +14,59 @@
  최광영 
  */
 
+using namespace std;
 class Game
 {
 protected:
-	vector<Player> * Players; // 등록된 플레이어들
+	vector<Player> Players; // 등록된 플레이어들
 
 public:
 	Game()
 	{
-		loadPlayers();
+		loadPlayers();// 게임 시작 시 players.txt에서 플레이어 목록 로딩
 	}
-	~Game();
-	void loadPlayers(); // 게임 시작 시 players.txt에서 플레이어 목록 로딩
-	void storePlayers(); // 게임 종료 시 players.txt에 플레이어 목록 저장
+	
+	~Game()
+	{
+		storePlayers();// 게임 종료 시 players.txt에 플레이어 목록 저장
+	}
+	
+	void loadPlayers()
+	{
+		ifstream fin;
+		fin.open("players.txt");
+		
+		int numofplayers;
+		
+		fin>>numofplayers;
+		
+		int num;
+		string playerName;
+		int balance;
+		double winningRate;
+		
+		for(int i = 0; i < numofplayers; i++ )
+		{
+			fin>>num>>playerName>>balance>>winningRate;
+			Players.push_back(Player(num, playerName, balance, winningRate));
+		}
+		fin.close();
+	}
+	void storePlayers()
+	{
+		ofstream fout;
+		fout.open("players.txt");
+		
+		sort(Players.begin(), Players.end(), cmpNum);
+		fout<<Players.size()<<endl;
+		
+		
+		for(int i = 0; i < Players.size(); i++ )
+		{
+			fout<<Players[i].getNum()<<" "<<Players[i].getName()<<" "<<Players[i].getBalance()<<" "<<Players[i].getRate()<<endl;
+		}
+		fout.close();
+	}
 	
 	void showIntro(); // 게임 첫 화면 출력
 	/*
@@ -53,7 +95,7 @@ public:
 	void showPlayers();  // #3. 잔고 기준 플레이어 랭킹 출력
 	/*
 	 벡터로 선언된 Players의 랭킹 출력
-	 1. 순번 2. 이름 3. 잔고
+	 1. 순번 2. 이름 3. 잔고 4. 승률
 	 */
 	
 	void fillUp(string playerName = "");       // #4. 기존 플레이어 게임머니 충전하기
