@@ -18,7 +18,10 @@ protected:
 	vector<Player> * Players; // 등록된 플레이어들
 
 public:
-	Game();
+	Game()
+	{
+		loadPlayers();
+	}
 	~Game();
 	void loadPlayers(); // 게임 시작 시 players.txt에서 플레이어 목록 로딩
 	void storePlayers(); // 게임 종료 시 players.txt에 플레이어 목록 저장
