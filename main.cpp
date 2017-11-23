@@ -11,6 +11,14 @@
 #include "Card.h"
 #include "Player.h"
 
+
+/*
+ 여유 있으면 split도 구현
+ 승률도 표시하기
+ 덱 수를 여러개 랜덤으로 결정
+
+ */
+
 int main()
 {
 	BlackJack BJ;

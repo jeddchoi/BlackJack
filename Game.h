@@ -7,12 +7,7 @@
 #include <vector>
 #include <algorithm>
 
-/*
- 여유 있으면 split도 구현
- 승률도 표시하기 
- 덱 수를 여러개 랜덤으로 결정
- 최광영 
- */
+
 
 using namespace std;
 class Game
@@ -68,7 +63,9 @@ public:
 		fout.close();
 	}
 	
-	void showIntro(); // 게임 첫 화면 출력
+	// 게임 첫 화면 출력
+	void showIntro()
+	{
 	/*
 	 먼저 loadPlayers() 통해서 players.txt로부터 Players 로딩
 	 1. 새로운 플레이어 등록
@@ -78,14 +75,41 @@ public:
 	 5. 라이센스 출력 혹은 게임방법 출력
 	 6. 게임 종료
 	 */
+		cout<<"Welcome to BlackJACK"<<endl;
+		cout<<endl;
+		cout<<"Whick menu are you going to choose? :"<<endl;
+		cout<<"1. Register new Player."<<endl;
+		cout<<"2. Game start if you have registered."<<endl;
+		cout<<"3. Show players status."<<endl;
+		cout<<"4. Charge your money."<<endl;
+		cout<<"5. Show how to game and Who make this game."<<endl;
+		cout<<"6. End game."<<endl;
+	}
 	
-	bool isRegisteredPlayer(string playerName); // 이미 있는 플레이어 이름인지 반환
-	void addNewPlayer(); // #1. 새로운 플레이어 등록
+	// 이미 있는 플레이어 이름인지 반환
+	bool isRegisteredPlayer(string playerName)
+	{
+		if(find(Players.begin(), Players.end(), playerName) != Players.end())
+			return true;
+		else
+			return false;
+	}
+	
+	
+	// ---- here 
+	// #1. 새로운 플레이어 등록
+	void addNewPlayer()
+	{
 	/*
 	 1. 이름 입력
 	 2. ->입력한 이름이 이미 있는 이름이면 메뉴 첫화면으로 return
 	 3. ->입력한 이름이 없으면 이름 입력 받고 그 이름으로 fillUp() 호출해 게임머니 충전하고 메뉴 첫화면으로 return
 	 */
+		cout<<"Enter your name. : ";
+		
+	}
+	
+	
 	
 	virtual void startGame();    // #2. 기존 플레이어로 게임 시작
 	/*
