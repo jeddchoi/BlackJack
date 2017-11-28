@@ -37,7 +37,7 @@ public:
 		
 		int num;
 		string playerName;
-		int balance;
+		double balance;
 		double winningRate;
 		
 		for(int i = 0; i < numofplayers; i++ )
@@ -89,14 +89,23 @@ public:
 	// 이미 있는 플레이어 이름인지 반환
 	bool isRegisteredPlayer(string playerName)
 	{
-		if(find(Players.begin(), Players.end(), playerName) != Players.end())
+		int idx = 0;
+		
+		while(idx < Players.size())
+		{
+			if(Players[idx].getName() == playerName)
+				break;
+			idx++;
+		}
+		
+		if( idx != Players.size() )
 			return true;
 		else
 			return false;
 	}
 	
 	
-	// ---- here 
+	
 	// #1. 새로운 플레이어 등록
 	void addNewPlayer()
 	{
@@ -105,44 +114,111 @@ public:
 	 2. ->입력한 이름이 이미 있는 이름이면 메뉴 첫화면으로 return
 	 3. ->입력한 이름이 없으면 이름 입력 받고 그 이름으로 fillUp() 호출해 게임머니 충전하고 메뉴 첫화면으로 return
 	 */
-		cout<<"Enter your name. : ";
+		string playerName;
 		
+		cout<<"Enter your name. : ";
+		cin>>playerName;
+		if( isRegisteredPlayer(playerName) )
+		{
+			cout<<endl<<"You already have registered you name."<<endl;
+			return;
+		}
+		else
+		{
+			Player newPlayer((unsigned int)Players.size(), playerName, 0, 0);
+			Players.push_back(newPlayer);
+			fillUp(playerName);
+		}
 	}
 	
 	
-	
-	virtual void startGame();    // #2. 기존 플레이어로 게임 시작
+	// #2. 기존 플레이어로 게임 시작
+	virtual void startGame()
+	{
 	/*
 	 이 부분은 BlackJack 클래스의 멤버함수로 함
 	 */
-	
-	void showPlayers();  // #3. 잔고 기준 플레이어 랭킹 출력
+	}
+	// #3. 잔고 기준 플레이어 랭킹 출력
+	void showPlayers()
+	{
 	/*
 	 벡터로 선언된 Players의 랭킹 출력
 	 1. 순번 2. 이름 3. 잔고 4. 승률
 	 */
+		cout<<"Num\tPlayer's name\tBalance\tWining Rate"<<endl;
+		for(int i = 0; i < Players.size(); i++ )
+		{
+			cout<<Players[i].getNum()<<"\t"<<Players[i].getName()<<"\t";
+			cout<<Players[i].getBalance()<<"\t"<<Players[i].getRate()<<"\t"<<endl;
+		}
+	}
 	
-	void fillUp(string playerName = "");       // #4. 기존 플레이어 게임머니 충전하기
+	// #4. 기존 플레이어 게임머니 충전하기
+	void fillUp(string playerName = "")
+	{
 	/*
 	 1. 메뉴 첫 화면에서 들어온 경우 : ->playerName == "" 이다.
 		 이름을 입력 받아서 Players에서 검색후 이름이 있으면 충전할 금액 입력받아서 업데이트 하기
 									   이름이 없으면 오류 문구 출력하고 메뉴 첫화면으로 return
-	 2. 새로운 플레이어 등록에서 들어온 경우 : playerName != "" 이다.
+	 2. 새로운 플레이어 등록, 혹은 게임 중에서 들어온 경우 : playerName != "" 이다.
 	     충전할 금액 입력 받아서 Players의 end()의 잔고를 업데이트 한 후 메뉴 첫화면으로 return
 	 */
+		
+		if(playerName == "")
+		{
+			cout<<"Enter your name. : ";
+			cin>>playerName;
+			if( !isRegisteredPlayer(playerName) )
+			{
+				cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
+				return;
+			}
+		}
+		
+		int idx = 0;
+		while(idx < Players.size())
+		{
+			if(Players[idx].getName() == playerName)
+				break;
+			idx++;
+		}
+		
+		if(idx == Players.size())
+		{
+			cout<<"Error"<<endl;
+			return;
+		}
+		
+		double money;
+		cout<<"Enter the amount as you want to charge. : ";
+		cin>>money;
+		
+		Players[idx].setBalance(money);
+		Players[idx].showPlayerInfo(); // 업데이트 된 정보 출력
+	}
 	
-	void showHowTO();    // #5. 게임방법 및 라이센스 출력
+	// #5. 게임방법 및 라이센스 출력
+	void showHowTO()
+	{
 	/*
 	 1. 게임방법 출력
 	 2. 라이센스 출력
 	 */
+		
+	}
 	
-	void exit();         // #6. 게임 종료
+	// #6. 게임 종료
+	void exit()
+	{
 	/*
 	 1. storePlayers() 통해서 Players를 players.txt 파일에 다시 저장하고
 	 2. "Thank you for playing" 출력후
 	 3. return
 	 */
+		storePlayers();
+		cout<<"Thank you for playing."<<endl;
+	}
 };
 
 class BlackJack : public Game
@@ -154,24 +230,48 @@ protected:
 	bool turn; // 현재 누구의 턴인가
 
 public:
-	BlackJack();
-	~BlackJack();
-	void initDealer(); // 처음 시작시 딜러 초기화
-	void loadPlayer(); // 현재 게임하는 사람 로딩
+	BlackJack() : Game()
+	{}
+	~BlackJack()
+	{}
+	// 처음 시작시 딜러 초기화
+	void initDealer()
+	{}
+	// 현재 게임하는 사람 로딩
+	void loadPlayer()
+	{}
 	
-	void shuffleCards(); // 52장의 카드 섞기
-	void doBetting(); // 플레이어가 베팅하기
-	void getTwoCards(); // 게임 시작시 두 장의 카드 받기
+	// 52장의 카드 섞기
+	void shuffleCards()
+	{}
+	// 플레이어가 베팅하기
+	void doBetting()
+	{}
+	// 게임 시작시 두 장의 카드 받기
+	void getTwoCards()
+	{}
 	
-	void showPlayerWhatToDo(); // 플레이어가 어떤 일할지 메뉴 출력하기
+	// 플레이어가 어떤 일할지 메뉴 출력하기
+	void showPlayerWhatToDo()
+	{}
 	/*
 	 1. STAY 2. HIT 3. DOUBLEDOWN 4. SURRENDER(2번째부터는 비활성화)
 	 */
-	void doPlayerTurn(); // 플레이어 턴에 할일 : 블랙잭이나 버스트가 아닐 경우
-	void doDealerTurn(); // 딜러 턴에 할 일 : 플레이어가 할일 다 한 경우
-	bool compareSum(); // 딜러 카드의 합과 플레이어 카드의 합 비교
+	// 플레이어 턴에 할일 : 블랙잭이나 버스트가 아닐 경우
+	void doPlayerTurn()
+	{}
+	// 딜러 턴에 할 일 : 플레이어가 할일 다 한 경우
+	void doDealerTurn()
+	{}
+	// 딜러 카드의 합과 플레이어 카드의 합 비교
+	bool compareSum()
+	{
+		return false;
+	}
 	
-	void getResult(int result); // 어떤 케이스냐에 따라 처리하는 결과가 달라짐
+	// 어떤 케이스냐에 따라 처리하는 결과가 달라짐
+	void getResult(int result)
+	{
 	/*
 	 1 -> 플레이어가 BLACKJACK인 경우 : 베팅금액 + 베팅금액 * 1.5를 돌려받기
 	 2 -> 플레이어가 win한 경우 : 베팅금액 + 베팅금액을 돌려받기
@@ -181,8 +281,10 @@ public:
 	 6 -> 플레이어가 SURREND한 경우 : 베팅금액의 1/2를 돌려받기
 	
 	 */
-
-	virtual void startGame();
+	}
+	
+	virtual void startGame()
+	{
 	/*
 	 1. 카드를 섞는다.
 	 2. 플레이어가 베팅을 한다. -> Starting_Balance에 Balance를 백업하고 Balance에서 베팅금액을 뺀다.
@@ -226,13 +328,20 @@ public:
 			 (b) 딜러가 합이 더 크다. -> 플레이어는 베팅금액을 잃는다. -> 게임 끝(5)
 			 (c) 합이 같다. -> push이므로 베팅금액만 그대로 돌려받는다. -> 게임 끝(3)
 	 */
+	}
 	
-	void updatePlayer(); // Players에 이번 플레이어의 정보 업데이트
-	void showGameResult(); // 이번 게임 종료시 결과 출력
+	// Players에 이번 플레이어의 정보 업데이트
+	void updatePlayer()
+	{}
+	
+	// 이번 게임 종료시 결과 출력
+	void showGameResult()
+	{
 	/*
 	 1. 이름
 	 2. 잔고
 	 3. 누적 획득 금액 (최종으로 잃었을 경우 -로 표시)
 	 5. 랭킹
 	 */
+	}
 };

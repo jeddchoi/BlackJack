@@ -6,16 +6,19 @@ using namespace std;
 class Player
 {
 protected:
-	int num;
-    string name;
-    int balance;
-	double winingRate;
+	int num; // 등록순 인덱스
+    string name; // 플레이어 이름
+    double balance; // 잔고
+	double winingRate; // 승률
 
 public:
-	Player(int num, string name, int balance, double rate) : num(num), name(name), balance(balance), winingRate(rate)
+	Player(int num, string name, double balance, double rate) : num(num), name(name), balance(balance), winingRate(rate)
 	{}
 	
-	~Player();
+	Player()
+	{}
+	~Player()
+	{}
 
 	int getNum() const
 	{
@@ -25,45 +28,71 @@ public:
 	{
 		return name;
 	}
-	int getBalance() const
+	double getBalance() const
 	{
 		return balance;
 	}
-	int getRate() const
+	double getRate() const
 	{
 		return winingRate;
 	}
 	
-	void setBalance();
+	void setBalance(double money)
+	{
+		balance += money;
+	}
 	
-	void setPlayer();
-	void showPlayerInfo();
+	void setPlayer()
+	{}
+	void showPlayerInfo()
+	{
+		cout<<"showPlayerInfo()"<<endl;
+	}
 };
 
 class GamePlayer : public Player
 {
 protected:
 	vector<Card> * Hand;
-	int Starting_balance;
-	int Bet;
-	int Sum;
+	double Starting_balance;
+	double Bet;
+	double Sum;
 	
-	int accMinus;
-	int accPlus;
+	double accMinus;
+	double accPlus;
 	
 public:
-	GamePlayer();
-	~GamePlayer();
+	GamePlayer(int num, string name, double balance, double rate) : Player(num, name, balance, rate)
+	{}
+	GamePlayer() : Player()
+	{}
+	~GamePlayer()
+	{}
 	
-	bool canBet();
+	bool canBet()
+	{
+		return false;
+	}
 	
-	void setBet();
-	void setCards();
-	void setStartingBalance();
+	void setBet()
+	{}
+	void setCards()
+	{}
+	void setStartingBalance()
+	{}
 	
-	int getStartingBalance();
-	int getAccMinus();
-	int getAccPlus();
+	double getStartingBalance()
+	{
+		return 0;
+	}
+	double getAccMinus()
+	{
+		return 0;
+	}
+	double getAccPlus()
+	{
+		return 0;
+	}
 	
 	
 };
@@ -71,6 +100,7 @@ public:
 bool cmpNum(const Player &a, const Player &b){
 	return a.getNum() < b.getNum();
 }
+
 class Dealer : public GamePlayer
 {
 public:

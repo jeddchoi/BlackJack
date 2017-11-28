@@ -22,7 +22,7 @@
 int main()
 {
 	BlackJack BJ;
-	char menu;
+	int menu;
 	
 	while(1)
 	{

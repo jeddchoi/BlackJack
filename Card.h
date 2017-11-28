@@ -6,7 +6,7 @@ using namespace std;
 namespace CARD
 {
 	/* 1또는 10으로 계산할 수 있는 A */
-	const int DI_A = 1; // 스페이스
+	const int DI_A = 1;
 	const int SD_A = 2;
 	const int HE_A = 3;
 	const int CV_A = 4;
@@ -78,17 +78,32 @@ protected:
 	int value; // 실제로 적용되는 값
 
 public:
-	Card();
-	~Card();
+	Card()
+	{}
+	~Card()
+	{}
 	
-	void setCard(char shape, int number, int value);
-	void setShape(char shape);
-	void setNumber(int number);
-	void setValue(int value);
+	void setCard(char shape, int number, int value)
+	{}
+	void setShape(char shape)
+	{}
+	void setNumber(int number)
+	{}
+	void setValue(int value)
+	{}
 	
-	char getShape();
-	int getNumber();
-	int getValue();
+	char getShape()
+	{
+		return 0;
+	}
+	int getNumber()
+	{
+		return 0;
+	}
+	int getValue()
+	{
+		return 0;
+	}
 	
 };
 
@@ -96,12 +111,25 @@ class Deck
 {
 	vector<Card> cards;
 public:
-	Deck(); // 52장으로 이루어져 있는 카드 생성하기
-	~Deck();
+	// 52장으로 이루어져 있는 카드 생성하기
+	Deck()
+	{}
+	~Deck()
+	{}
 	
-	void shuffleDeck(); // 덱 카드 순서 섞기
-	int getRemainCardsNum(); // 덱에 남아있는 카드 갯수 반환하기
-	Card getACard(); // 덱에서 맨 위에(뒤에) 있는 카드 뽑기
+	// 덱 카드 순서 섞기
+	void shuffleDeck()
+	{}
+	// 덱에 남아있는 카드 갯수 반환하기
+	int getRemainCardsNum()
+	{
+		return 0;
+	}
+	// 덱에서 맨 위에(뒤에) 있는 카드 뽑기
+	Card getACard()
+	{
+		return cards.back();
+	}
 	
 	
 
