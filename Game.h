@@ -75,15 +75,18 @@ public:
 	 5. 라이센스 출력 혹은 게임방법 출력
 	 6. 게임 종료
 	 */
-		cout<<"Welcome to BlackJACK"<<endl;
-		cout<<endl;
-		cout<<"Whick menu are you going to choose? :"<<endl;
+		printLine();
+		
 		cout<<"1. Register new Player.(R or r)"<<endl;
 		cout<<"2. Game start if you have registered.(G or g)"<<endl;
 		cout<<"3. Show players status.(S or s)"<<endl;
 		cout<<"4. Charge your money.(C or c)"<<endl;
 		cout<<"5. Information : How to game and Who make this game.(I or i)"<<endl;
 		cout<<"6. End game.(E or e)"<<endl;
+		
+		printLine();
+		
+		cout<<"Whick menu are you going to choose? : ";
 	}
 	
 	// 이미 있는 플레이어 이름인지 반환
@@ -149,12 +152,16 @@ public:
 		sort(Players.begin(), Players.end(), cmpBalance);
 		
 		cout.setf(ios::left, ios::adjustfield);
+		
+		printLine();
 		cout<<setw(4)<<"Num"<<setw(20)<<"Player's name"<<setw(10)<<"Balance"<<setw(10)<<"Wining Rate"<<endl;
+		printLine();
 		for(int i = 0; i < Players.size(); i++ )
 		{
 			cout<<setw(4)<<Players[i].getNum()<<setw(20)<<Players[i].getName();
 			cout<<setw(10)<<Players[i].getBalance()<<setw(10)<<Players[i].getRate()<<endl;
 		}
+		printLine();
 		
 		sort(Players.begin(), Players.end(), cmpNum);
 	}
@@ -223,6 +230,11 @@ public:
 	 */
 		storePlayers();
 		cout<<"Thank you for playing."<<endl;
+	}
+	
+	void printLine()
+	{
+		cout<<"-----------------------------------------------------------------"<<endl;
 	}
 };
 

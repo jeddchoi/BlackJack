@@ -24,6 +24,8 @@ int main()
 	BlackJack BJ;
 	char menu;
 	
+	cout<<"Welcome to BlackJACK"<<endl;
+	cout<<endl;
 	while(1)
 	{
 		// 메뉴 첫화면 출력
@@ -69,8 +71,8 @@ int main()
 		}
 		catch(char exception)
 		{
-			cout<<"Wrong Value."<<endl;
-			cin.ignore();
+			cout<<"Please Try Again."<<endl;
+			cin.clear();
 		}
 	}
 	return 0;
