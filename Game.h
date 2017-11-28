@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-
+#include <iomanip>
 
 
 using namespace std;
@@ -78,12 +78,12 @@ public:
 		cout<<"Welcome to BlackJACK"<<endl;
 		cout<<endl;
 		cout<<"Whick menu are you going to choose? :"<<endl;
-		cout<<"1. Register new Player."<<endl;
-		cout<<"2. Game start if you have registered."<<endl;
-		cout<<"3. Show players status."<<endl;
-		cout<<"4. Charge your money."<<endl;
-		cout<<"5. Show how to game and Who make this game."<<endl;
-		cout<<"6. End game."<<endl;
+		cout<<"1. Register new Player.(R or r)"<<endl;
+		cout<<"2. Game start if you have registered.(G or g)"<<endl;
+		cout<<"3. Show players status.(S or s)"<<endl;
+		cout<<"4. Charge your money.(C or c)"<<endl;
+		cout<<"5. Information : How to game and Who make this game.(I or i)"<<endl;
+		cout<<"6. End game.(E or e)"<<endl;
 	}
 	
 	// 이미 있는 플레이어 이름인지 반환
@@ -146,12 +146,17 @@ public:
 	 벡터로 선언된 Players의 랭킹 출력
 	 1. 순번 2. 이름 3. 잔고 4. 승률
 	 */
-		cout<<"Num\tPlayer's name\tBalance\tWining Rate"<<endl;
+		sort(Players.begin(), Players.end(), cmpBalance);
+		
+		cout.setf(ios::left, ios::adjustfield);
+		cout<<setw(4)<<"Num"<<setw(20)<<"Player's name"<<setw(10)<<"Balance"<<setw(10)<<"Wining Rate"<<endl;
 		for(int i = 0; i < Players.size(); i++ )
 		{
-			cout<<Players[i].getNum()<<"\t"<<Players[i].getName()<<"\t";
-			cout<<Players[i].getBalance()<<"\t"<<Players[i].getRate()<<"\t"<<endl;
+			cout<<setw(4)<<Players[i].getNum()<<setw(20)<<Players[i].getName();
+			cout<<setw(10)<<Players[i].getBalance()<<setw(10)<<Players[i].getRate()<<endl;
 		}
+		
+		sort(Players.begin(), Players.end(), cmpNum);
 	}
 	
 	// #4. 기존 플레이어 게임머니 충전하기

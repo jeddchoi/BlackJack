@@ -50,6 +50,14 @@ public:
 	}
 };
 
+bool cmpNum(const Player &a, const Player &b){
+	return a.getNum() < b.getNum();
+}
+
+bool cmpBalance(const Player &a, const Player &b){
+	return a.getBalance() > b.getBalance();
+}
+
 class GamePlayer : public Player
 {
 protected:
@@ -97,9 +105,7 @@ public:
 	
 };
 
-bool cmpNum(const Player &a, const Player &b){
-	return a.getNum() < b.getNum();
-}
+
 
 class Dealer : public GamePlayer
 {
