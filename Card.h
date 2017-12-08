@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <time.h>
 using namespace std;
 
 namespace CARD
@@ -84,18 +85,18 @@ protected:
 
 private:
 	char shp;
-	int cards;
+	int cards, number;
 
 public:
 	Card(int cards);
 	Card(){cards = 52;}
 	~Card();
 	
-	void setCard(char shape, int number, int value);
+	void setCard(char shape, int number);
 	void setShape(char shape);
-	void setNumber(int number);
+	void setValue(int number);
 	
-	char getShape();
+	char getShape(int shp);
 	int getNumber();
 	int getValue();
 	
@@ -118,6 +119,7 @@ public:
 	// 덱에서 맨 위에(뒤에) 있는 카드 뽑기
 	Card getACard();	
 	
+	void init();
 };
 
 #endif /*__CARD_H_*/
