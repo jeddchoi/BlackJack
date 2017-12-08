@@ -1,10 +1,15 @@
+#ifndef __CARD_H_
+#define __CARD_H_
+
 #pragma once
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
 using namespace std;
 
 namespace CARD
 {
+	const int CARDNUMBER = 52;
 	/* 1또는 10으로 계산할 수 있는 A */
 	const int DI_A = 1;
 	const int SD_A = 2;
@@ -77,33 +82,22 @@ protected:
 	int cardName; // 카드 이름
 	int value; // 실제로 적용되는 값
 
+private:
+	char shp;
+	int cards;
+
 public:
-	Card()
-	{}
-	~Card()
-	{}
+	Card(int cards);
+	Card(){cards = 52;}
+	~Card();
 	
-	void setCard(char shape, int number, int value)
-	{}
-	void setShape(char shape)
-	{}
-	void setNumber(int number)
-	{}
-	void setValue(int value)
-	{}
+	void setCard(char shape, int number, int value);
+	void setShape(char shape);
+	void setNumber(int number);
 	
-	char getShape()
-	{
-		return 0;
-	}
-	int getNumber()
-	{
-		return 0;
-	}
-	int getValue()
-	{
-		return 0;
-	}
+	char getShape();
+	int getNumber();
+	int getValue();
 	
 };
 
@@ -112,25 +106,18 @@ class Deck
 	vector<Card> cards;
 public:
 	// 52장으로 이루어져 있는 카드 생성하기
-	Deck()
-	{}
-	~Deck()
-	{}
+	Deck();
+	~Deck();
 	
 	// 덱 카드 순서 섞기
-	void shuffleDeck()
-	{}
-	// 덱에 남아있는 카드 갯수 반환하기
-	int getRemainCardsNum()
-	{
-		return 0;
-	}
-	// 덱에서 맨 위에(뒤에) 있는 카드 뽑기
-	Card getACard()
-	{
-		return cards.back();
-	}
-	
-	
+	void shuffleDeck();
 
+	// 덱에 남아있는 카드 갯수 반환하기
+	int getRemainCardsNum();
+	
+	// 덱에서 맨 위에(뒤에) 있는 카드 뽑기
+	Card getACard();	
+	
 };
+
+#endif /*__CARD_H_*/
