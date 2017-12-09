@@ -259,47 +259,64 @@ public:
 			cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
 			return false;
 		}
-		currentPlayer = Players[idx];
+		currentPlayer.setPlayer(Players[idx]); // player.h
 		return true;
 	}
 
 	// 플레이어가 베팅하기 : 정상적으로 베팅되었으면 true 반환, 아니면 false 반환
 	bool doBetting()
 	{
-		double bet;
+		double money;
 		//-> Starting_Balance에 Balance를 백업하고 Balance에서 베팅금액을 뺀다.
 		currentPlayer.setStartingBalance();
-		cout<<"How much do you want to bet? :";
-		cin>>bet;
-		if(currentPlayer.canBet(bet))
+		
+		while(true)
 		{
-			currentPlayer.plusBet(bet); // 베팅금액을 덮어씌우는게 아니라 더해야 함.
-			currentPlayer.showPlayerInfo();
-			return true;
-		}
-		else
-		{
-			cout<<"You don't have enough money."<<endl;
-			cout<<"You go to main menu."<<endl;
-			return false;
+			try{
+				cout<<"How much do you want to bet? :";
+				cin>>money;
+				cin.ignore();
+				
+				if(!isdigit(money))
+					throw money;
+				
+				if(currentPlayer.canBet(money))
+				{
+					currentPlayer.plusBet(money); // 베팅금액을 덮어씌우는게 아니라 더해야 함.
+					currentPlayer.showPlayerInfo();
+					return true;
+				}
+				else
+				{
+					cout<<"You don't have enough money."<<endl;
+					cout<<"You go to main menu."<<endl;
+					return false;
+				}
+			}
+			catch(char exception)
+			{
+				cout<<"Please Try Again."<<endl;
+				cin.clear();
+			}
 		}
 	}
 	
 	void showFirstCards() // 딜러는 오픈카드만, 플레이어는 두 장의 첫 카드를 보여준다.
 	{
-		
+		Computer.showOpenCard();
+		currentPlayer.showFirstTwoCards();
 	}
 	
 	void showHand(GamePlayer p) // 딜러인지 플레이어 인지 인수로 받아서 핸드에 가지고 있는 모든 카드를 보여준다.
 	{
-		
+		p.showHand();
 	}
 	
 	// 게임 시작시 두 장의 카드 받기
 	int getTwoCards()
 	{
-		currentPlayer.drawCards();
-		Computer.drawCards();
+		currentPlayer.drawCards(deck);
+		Computer.drawCards(deck);
 		player_draw++;
 		
 		if(Computer.isOpenCardAce())
@@ -360,12 +377,13 @@ public:
 	  		(b) 합이 21 이하이다 -> turn을 딜러로 넘긴다.
 		(4) SURRENDER -> 베팅금액의 1/2만 다시 Balance에 충전되고 게임 끝(6)
 		*/
-		showPlayerWhatToDo();
+		
 		char response;
 		int result = -1;
 		while(true)
 		{
 			try{
+				showPlayerWhatToDo();
 				// 메뉴 선택
 				cin>>response;
 				cin.ignore();
@@ -382,12 +400,12 @@ public:
 					// HIT
 					case 'H':
 					case 'h':
-						currentPlayer.drawCard();
+						currentPlayer.drawCard(deck);
 						player_draw++;
 						showHand(currentPlayer);
 						if(currentPlayer.getCardSum() > 21)
 						{
-							result = 5; // BUST
+							result = 5; // BURST
 							break;
 						}
 						else
@@ -405,12 +423,12 @@ public:
 							cout<<"You don't have enough money."<<endl;
 							continue;
 						}
-						currentPlayer.drawCard();
+						currentPlayer.drawCard(deck);
 						player_draw++;
 						showHand(currentPlayer);
 						if(currentPlayer.getCardSum() > 21)
 						{
-							result = 5; //BUST
+							result = 5; //BURST
 							break;
 						}
 						else
@@ -461,7 +479,7 @@ public:
 			int sum = Computer.getCardSum();
 			if(sum <= 16)
 			{
-				Computer.drawCard();
+				Computer.drawCard(deck);
 				cont = true;
 			}
 			else if(sum >= 22)
