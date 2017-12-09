@@ -26,6 +26,7 @@ public:
 		storePlayers();// 게임 종료 시 players.txt에 플레이어 목록 저장
 	}
 	
+	// 완성
 	void loadPlayers()
 	{
 		ifstream fin;
@@ -47,6 +48,8 @@ public:
 		}
 		fin.close();
 	}
+	
+	// 완성
 	void storePlayers()
 	{
 		ofstream fout;
@@ -63,7 +66,7 @@ public:
 		fout.close();
 	}
 	
-	// 게임 첫 화면 출력
+	// 완성)게임 첫 화면 출력
 	void showIntro()
 	{
 	/*
@@ -89,27 +92,27 @@ public:
 		cout<<"Whick menu are you going to choose? : ";
 	}
 	
-	// 이미 있는 플레이어 이름인지 반환
-	bool isRegisteredPlayer(string playerName)
+	// 플레이어의 인덱스를 반환하고 없으면 -1반환
+	int getRegisteredPlayerIdx(string playerName)
 	{
 		int idx = 0;
-		
+		int result = -1;
 		while(idx < Players.size())
 		{
 			if(Players[idx].getName() == playerName)
+			{
+				result = idx;
 				break;
+			}
 			idx++;
 		}
 		
-		if( idx != Players.size() )
-			return true;
-		else
-			return false;
+		return result;
 	}
 	
 	
 	
-	// #1. 새로운 플레이어 등록
+	// 완성)#1. 새로운 플레이어 등록
 	void addNewPlayer()
 	{
 	/*
@@ -121,7 +124,7 @@ public:
 		
 		cout<<"Enter your name. : ";
 		cin>>playerName;
-		if( isRegisteredPlayer(playerName) )
+		if( getRegisteredPlayerIdx(playerName) != -1 )
 		{
 			cout<<endl<<"You already have registered you name."<<endl;
 			return;
@@ -142,7 +145,7 @@ public:
 	 이 부분은 BlackJack 클래스의 멤버함수로 함
 	 */
 	}
-	// #3. 잔고 기준 플레이어 랭킹 출력
+	// 완성)#3. 잔고 기준 플레이어 랭킹 출력
 	void showPlayers()
 	{
 	/*
@@ -166,7 +169,7 @@ public:
 		sort(Players.begin(), Players.end(), cmpNum);
 	}
 	
-	// #4. 기존 플레이어 게임머니 충전하기
+	// 완성)#4. 기존 플레이어 게임머니 충전하기
 	void fillUp(string playerName = "")
 	{
 	/*
@@ -181,24 +184,12 @@ public:
 		{
 			cout<<"Enter your name. : ";
 			cin>>playerName;
-			if( !isRegisteredPlayer(playerName) )
-			{
-				cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
-				return;
-			}
 		}
 		
-		int idx = 0;
-		while(idx < Players.size())
+		int idx = getRegisteredPlayerIdx(playerName);
+		if( idx == -1 )
 		{
-			if(Players[idx].getName() == playerName)
-				break;
-			idx++;
-		}
-		
-		if(idx == Players.size())
-		{
-			cout<<"Error"<<endl;
+			cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
 			return;
 		}
 		
@@ -220,7 +211,7 @@ public:
 		
 	}
 	
-	// #6. 게임 종료
+	// 완성)#6. 게임 종료
 	void exit()
 	{
 	/*
@@ -253,16 +244,24 @@ public:
 	}
 	~BlackJack()
 	{}
-	// 처음 시작시 딜러 초기화
-	void initDealer()
-	{}
-	// 현재 게임하는 사람 로딩
-	void loadPlayer()
-	{}
 	
-	// 52장의 카드 섞기
-	void shuffleDecks()
-	{}
+	// 현재 게임하는 사람 로딩 : 성공하면 true, 실패하면 false 반환
+	bool loadPlayer()
+	{
+		string playerName;
+		cout<<"Enter your name. : ";
+		cin>>playerName;
+		
+		int idx = getRegisteredPlayerIdx(playerName);
+		
+		if( idx == -1 )
+		{
+			cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
+			return false;
+		}
+		currentPlayer = Players[idx];
+		return true;
+	}
 
 	// 플레이어가 베팅하기 : 정상적으로 베팅되었으면 true 반환, 아니면 false 반환
 	bool doBetting()
@@ -290,10 +289,12 @@ public:
 	{
 		
 	}
+	
 	void showHand(GamePlayer p) // 딜러인지 플레이어 인지 인수로 받아서 핸드에 가지고 있는 모든 카드를 보여준다.
 	{
 		
 	}
+	
 	// 게임 시작시 두 장의 카드 받기
 	int getTwoCards()
 	{
@@ -414,7 +415,7 @@ public:
 						}
 						else
 						{
-							break;
+							continue;
 						}
 					
 					// SURRENDER if
@@ -440,12 +441,61 @@ public:
 	}
 	
 	// 딜러 턴에 할 일 : 플레이어가 할일 다 한 경우
-	void doDealerTurn()
-	{}
-	// 딜러 카드의 합과 플레이어 카드의 합 비교
-	bool compareSum()
+	int doDealerTurn()
 	{
-		return false;
+		/*
+		* 딜러가 할일 :(딜러의 오픈카드가 에이스인 경우, 딜러가 블랙잭인 경우는 이미 다뤄졌음)
+		** 히든카드를 출력한다.
+		(1) 합이 16 이하다. -> 추가 카드를 획득한다. -> 추가 카드를 출력한다. -> 다시 분기로 이동
+		(2) 합이 22 이상이다. -> 딜러가 버스트했으므로 플레이어는 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
+		(3) 합이 21 이하이다. -> 플레이어의 카드 합과 비교한다.
+		 	(a) 플레이어가 합이 더 크다. -> 플레이어가 이겼으므로 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
+		 	(b) 딜러가 합이 더 크다. -> 플레이어는 베팅금액을 잃는다. -> 게임 끝(5)
+		 	(c) 합이 같다. -> push이므로 베팅금액만 그대로 돌려받는다. -> 게임 끝(3)
+		 */
+		int result = -1;
+		bool cont = true;
+		while(cont)
+		{
+			showHand(Computer);
+			int sum = Computer.getCardSum();
+			if(sum <= 16)
+			{
+				Computer.drawCard();
+				cont = true;
+			}
+			else if(sum >= 22)
+			{
+				cont = false;
+				cout<"Dealer burst!"<<endl;
+				result = 2; // 딜러가 졌음
+			}
+			else
+			{
+				cont = false;
+				int tmp = compareSum(currentPlayer, Computer);
+				if(tmp == 1) // 카드합 : 플레이어 > 딜러
+					result = 2; // 딜러가 졌음
+				else if(tmp == -1) // 카드합 : 플레이어 < 딜러
+					result = 5; // 플레이어가 졌음
+				else // 카드합 : 플레이어 == 딜러
+					result = 3; // 플레이어와 딜러 비김
+			}
+		}
+		return result;
+	}
+	// 딜러 카드의 합과 플레이어 카드의 합 비교
+	int compareSum(GamePlayer& p1, GamePlayer& p2)
+	{
+		int sum1 = p1.getCardSum();
+		int sum2 = p2.getCardSum();
+		
+		if(sum1 < sum2)
+			return -1;
+		else if(sum1 > sum2)
+			return 1;
+		else
+			return 0;
 	}
 	
 	// 어떤 케이스냐에 따라 처리하는 결과가 달라짐
@@ -461,6 +511,7 @@ public:
 		 
 		 */
 		int bet = currentPlayer.getBet();
+		int insurance = currentPlayer.getInsurance();
 		switch (result) {
 			case 1:
 				cout<<"BLACK JACK!"<<endl;
@@ -479,7 +530,7 @@ public:
 				
 			case 4:
 				cout<<"Insuranse hit!"<<endl;
-				currentPlayer.setBalance(bet);
+				currentPlayer.setBalance(insurance + insurance * 2);
 				break;
 				
 			case 5:
@@ -550,8 +601,11 @@ public:
 				switch (response) {
 					case 'Y':
 					case 'y':
-						if(currentPlayer.canBet(currentPlayer.getBet() / 2))
+						if(currentPlayer.canBet(currentPlayer.getBet() / 2)) // 추가적으로 베팅금의 반만큼 베팅 할 수 있나?
+						{
+							currentPlayer.setInsurance(currentPlayer.getBet() / 2);
 							return true;
+						}
 						else
 						{
 							cout<<"You don't have enough money."
@@ -573,117 +627,196 @@ public:
 		}
 	}
 	
+	bool wannaRestart()
+	{
+		cout<<"Do you want to restart the Game?(Y/N) :";
+		char response;
+		while(true)
+		{
+			try{
+				// 메뉴 선택
+				cin>>response;
+				cin.ignore();
+				
+				if(!isalpha(response))
+					throw response;
+				
+				switch (response) {
+					case 'Y':
+					case 'y':
+						return true;
+					case 'N':
+					case 'n':
+						return false
+					default:
+						continue;
+				}
+				break;
+			}
+			catch(char exception)
+			{
+				cout<<"Please Try Again."<<endl;
+				cin.clear();
+			}
+		}
+	}
 	virtual void startGame()
 	{
-		shuffleDecks();
-		doBetting();
-		int first_result = getTwoCards();
-		
-		showFirstCards();
-		
-		switch (first_result)
-		{
-			case 1: // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
-				if(wannaEvenMoney()) // 이븐 머니 한다면
-				{
-					getResult(2); // 2번 결과로 처리
-					return; // 게임 종료
-				}
-				else
-				{
-					Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
-					if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
-						getResult(3); // 3번 결과로 처리
-					else // 딜러가 블랙잭이 아니면
-						getResult(1); // 1번 결과로 처리
-					return;
-				}
-				break;
-			case 2: // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
-				if(wannaInsurance())
-				{
-					
-				}
-				else
-				{
-					
-				}
-				
-				break;
-			case 3: // 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
-				
-				break;
-			case 4: // 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
-				
-				break;
-			case 5: // 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
-				
-				break;
-			case 6: // 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
-				
-				break;
-			
-			default:
-				break;
-		}
-		
-	/*
-	 1. 카드를 섞는다.
-	 2. 플레이어가 베팅을 한다. -> Starting_Balance에 Balance를 백업하고 Balance에서 베팅금액을 뺀다.
-	 3. 플레이어가 카드 1장 받고 딜러가 히든카드 1장 받는다. 그리고 다시 플레이어, 딜러 각각 1장씩 받는다.
-	 4. 각 패를 보여준다.
-	 5. 만약, 딜러의 오픈 카드가 에이스다. :
-	     1) 플레이어는 블랙잭이다. -> 이븐머니 여부를 묻는다.
-			 (1) 이븐머니 한다 -> 딜러의 히든카드를 보여준다.
-				 (a) 딜러가 블랙잭 여부 상관없이 -> 베팅금액 + 베팅금액(승리수당)을 받는다. -> 게임 끝(2)
-			 (2) 이븐머니 하지 않는다. -> 딜러의 히든카드를 보여준다.
-				 (a) 딜러가 블랙잭이다. -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
-				 (b) 딜러가 블랙잭이 아니다. -> 베팅금액 + 베팅금액*1.5를 받는다. -> 게임 끝(1)
+		/*
+		 1. 카드를 섞는다.
+		 2. 플레이어가 베팅을 한다. -> Starting_Balance에 Balance를 백업하고 Balance에서 베팅금액을 뺀다.
+		 3. 플레이어가 카드 1장 받고 딜러가 히든카드 1장 받는다. 그리고 다시 플레이어, 딜러 각각 1장씩 받는다.
+		 4. 각 패를 보여준다.
+		 5. 만약, 딜러의 오픈 카드가 에이스다. :
+		 1) 플레이어는 블랙잭이다. -> 이븐머니 여부를 묻는다.
+		 (1) 이븐머니 한다 -> 딜러의 히든카드를 보여준다.
+		 (a) 딜러가 블랙잭 여부 상관없이 -> 베팅금액 + 베팅금액(승리수당)을 받는다. -> 게임 끝(2)
+		 (2) 이븐머니 하지 않는다. -> 딜러의 히든카드를 보여준다.
+		 (a) 딜러가 블랙잭이다. -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
+		 (b) 딜러가 블랙잭이 아니다. -> 베팅금액 + 베팅금액*1.5를 받는다. -> 게임 끝(1)
 		 2) 플레이어가 블랙잭이 아니다. ->인슈런스 여부를 묻는다.
-			 (1) 인슈런스를 한다 -> (베팅액의 절반을 Balance에서 뺀다.) -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
-				 (a) 딜러가 블랙잭이다. -> 보험금 + 보험금*2 를 받는다. -> 게임 끝(4)
-				 (b) 딜러가 블랙잭이 아니다. -> 보험금은 잃고 딜러가 할일 한다.-> 결과에 따라 계산한다. -> 게임 끝
-			 (2) 인슈런스를 하지않는다. -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
-				 (a) 딜러가 블랙잭이다. -> 베팅금액을 잃는다. -> 게임 끝(5)
-				 (b) 딜러가 블랙잭이 아니다. -> 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
-	 - 딜러의 오픈카드가 에이스가 아니다. :
-		1) 플레이어는 블랙잭이다.
-	 		(1) 딜러도 블랙잭이다.(21) -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
-			(2) 딜러가 할일한다. -> 결과에 따라 계산한다. -> 게임 끝
-	 	2) 플레이어가 블랙잭이 아니다.
-	 		(1) 딜러는 블랙잭이다.(21) -> 딜러가 이겼다. -> 게임 끝
-	 
-	 		(2) 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
-	 
-	 6. 게임끝이면 다시 게임할건지 묻는다.
+		 (1) 인슈런스를 한다 -> (베팅액의 절반을 Balance에서 뺀다.) -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
+		 (a) 딜러가 블랙잭이다. -> 보험금 + 보험금*2 를 받는다. -> 게임 끝(4)
+		 (b) 딜러가 블랙잭이 아니다. -> 보험금은 잃고 딜러가 할일 한다.-> 결과에 따라 계산한다. -> 게임 끝
+		 (2) 인슈런스를 하지않는다. -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
+		 (a) 딜러가 블랙잭이다. -> 베팅금액을 잃는다. -> 게임 끝(5)
+		 (b) 딜러가 블랙잭이 아니다. -> 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
+		 - 딜러의 오픈카드가 에이스가 아니다. :
+		 1) 플레이어는 블랙잭이다.
+		 (1) 딜러도 블랙잭이다.(21) -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
+		 (2) 딜러가 할일한다. -> 결과에 따라 계산한다. -> 게임 끝
+		 2) 플레이어가 블랙잭이 아니다.
+		 (1) 딜러는 블랙잭이다.(21) -> 딜러가 이겼다. -> 게임 끝
+		 
+		 (2) 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
+		 
+		 6. 게임끝이면 다시 게임할건지 묻는다.
 		 1) 다시 할거다. -> 1.로 간다.
 		 2) 끝낸다. -> 지금까지의 게임 결과 출력하고 updatePlayer()로 currentPlayer를 Players에 업데이트한 후 return
-	 
-	 * 플레이어 할일 :(플레이어가 블랙잭인 경우는 이미 다뤄졌음)
+		 
+		 * 플레이어 할일 :(플레이어가 블랙잭인 경우는 이미 다뤄졌음)
 		 ** 메뉴를 출력한다. -> 메뉴를 선택한다.
 		 (1) STAY -> turn을 딜러로 넘긴다.
 		 (2) HIT -> 추가 카드를 받는다. -> 추가 카드를 출력한다.
-			 (a) 합이 22 이상이다 -> 베팅금액 잃고 게임 끝(5)
-			 (b) 합이 21 이하이다 -> 1)로 간다. ->SURRENDER 비활성화
+		 (a) 합이 22 이상이다 -> 베팅금액 잃고 게임 끝(5)
+		 (b) 합이 21 이하이다 -> 1)로 간다. ->SURRENDER 비활성화
 		 (3) DOUBLEDOWN -> 추가 카드를 받고 베팅금액이 2배가 된다.(Balance에서 베팅금액 한 번 더 빠짐) -> 추가 카드를 출력한다.
-			 (a) 합이 22 이상이다 -> 모든 베팅금액 잃고 게임 끝(5)
-			 (b) 합이 21 이하이다 -> turn을 딜러로 넘긴다.
+		 (a) 합이 22 이상이다 -> 모든 베팅금액 잃고 게임 끝(5)
+		 (b) 합이 21 이하이다 -> turn을 딜러로 넘긴다.
 		 (4) SURRENDER -> 베팅금액의 1/2만 다시 Balance에 충전되고 게임 끝(6)
-	 
-	 * 딜러가 할일 :(딜러의 오픈카드가 에이스인 경우, 딜러가 블랙잭인 경우는 이미 다뤄졌음)
-	     ** 히든카드를 출력한다.
+		 
+		 * 딜러가 할일 :(딜러의 오픈카드가 에이스인 경우, 딜러가 블랙잭인 경우는 이미 다뤄졌음)
+		 ** 히든카드를 출력한다.
 		 (1) 합이 16 이하다. -> 추가 카드를 획득한다. -> 추가 카드를 출력한다. -> 다시 분기로 이동
 		 (2) 합이 22 이상이다. -> 딜러가 버스트했으므로 플레이어는 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
 		 (3) 합이 21 이하이다. -> 플레이어의 카드 합과 비교한다.
-			 (a) 플레이어가 합이 더 크다. -> 플레이어가 이겼으므로 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
-			 (b) 딜러가 합이 더 크다. -> 플레이어는 베팅금액을 잃는다. -> 게임 끝(5)
-			 (c) 합이 같다. -> push이므로 베팅금액만 그대로 돌려받는다. -> 게임 끝(3)
-	 */
+		 (a) 플레이어가 합이 더 크다. -> 플레이어가 이겼으므로 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
+		 (b) 딜러가 합이 더 크다. -> 플레이어는 베팅금액을 잃는다. -> 게임 끝(5)
+		 (c) 합이 같다. -> push이므로 베팅금액만 그대로 돌려받는다. -> 게임 끝(3)
+		 */
+		
+		bool cont;
+		if(loadPlayer()) // 이름 입력 받아서 플레이어 정보를 로딩한다.
+			cont = true;
+		else
+			return;
+		
+		while(cont)
+		{
+			Computer.initHand(); // 딜러 핸드 초기화
+			deck.init(); // 52장 카드로 초기화한다.
+			deck.shuffleDeck(); // 덱의 카드들을 섞는다.
+			currentPlayer.initGame(); // 카드와 베팅금액을 비운다.
+			Computer.initGame(); // 카드를 비운다.
+			doBetting(); // player는 베팅을 한다.
+			int first_result = getTwoCards();
+			
+			showFirstCards();
+			switch (first_result)
+			{
+				case 1: // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
+					if(wannaEvenMoney()) // 이븐 머니 한다면
+					{
+						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
+						getResult(2); // 2번 결과로 처리
+						continue; // 게임 종료
+					}
+					else
+					{
+						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
+						if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
+							getResult(3); // 3번 결과로 처리
+						else // 딜러가 블랙잭이 아니면
+							getResult(1); // 1번 결과로 처리
+						continue;
+					}
+				case 2: // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
+					if(wannaInsurance())
+					{
+						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
+						if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
+							getResult(4); // 3번 결과로 처리
+						else // 딜러가 블랙잭이 아니면
+						{
+							int tmp = doDealerTurn();
+							getResult(tmp);
+						}
+					}
+					else
+					{
+						int tmp = doPlayerTurn();
+						if(tmp == 1) // 플레이어가 stay해서 비교해야함
+						{
+							int tmp2 = compareSum(currentPlayer, Computer);
+							if(tmp2 == 1) // 카드합 : 플레이어 > 딜러
+								result = 2; // 딜러가 졌음
+							else if(tmp2 == -1) // 카드합 : 플레이어 < 딜러
+								result = 5; // 플레이어가 졌음
+							else // 카드합 : 플레이어 == 딜러
+								result = 3; // 플레이어와 딜러 비김
+							getResult(tmp2);
+						}
+						else // 플레이어가 버스트 혹은 서렌더한 경우
+							getResult(tmp);
+					}
+					continue; // 게임 종료
+				case 3: // 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
+					getResult(3);
+					continue; // 게임 종료
+				case 4: // 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
+					int tmp = doDealerTurn();
+					getResult(tmp);
+					continue; // 게임 종료
+				case 5: // 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
+					getResult(5);
+					continue; // 게임 종료
+				case 6: // 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
+					int tmp = doDealerTurn();
+					getResult(tmp);
+					continue; // 게임 종료
+				
+				default:
+					break;
+			}
+			
+			if(wannaRestart())
+			{
+				cont = true;
+				
+			}
+			else
+				cont = false;
+		}
+		updatePlayer();
+		showGameResult();
 	}
 	
 	// Players에 이번 플레이어의 정보 업데이트
 	void updatePlayer()
-	{}
+	{
+		int idx = getRegisteredPlayerIdx(currentPlayer.getName());
+		Players[idx].setPlayer(currentPlayer);
+	}
 	
 	// 이번 게임 종료시 결과 출력
 	void showGameResult()
