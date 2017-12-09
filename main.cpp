@@ -58,7 +58,7 @@ int main()
 					continue;
 				case 'I':
 				case 'i':
-					BJ.showHowTO();
+					BJ.showLicence();
 					continue;
 				case 'E': // 게임 종료하기
 				case 'e': // 게임 종료하기

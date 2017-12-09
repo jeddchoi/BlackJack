@@ -201,14 +201,22 @@ public:
 		Players[idx].showPlayerInfo(); // 업데이트 된 정보 출력
 	}
 	
-	// #5. 게임방법 및 라이센스 출력
-	void showHowTO()
+	// 완성)#5. 라이센스 출력
+	void showLicence()
 	{
 	/*
-	 1. 게임방법 출력
 	 2. 라이센스 출력
 	 */
-		
+		cout<<"-----------------------------------------------------------------"<<endl;
+		cout<<"|           - =-=-=- Who made this Game -=-=-=-                 |"<<endl;
+		cout<<"|                                                               |"<<endl;
+		cout<<"|            1. Taekyoung Oh                                    |"<<endl;
+		cout<<"|            2. Seoyeon Choi                                    |"<<endl;
+		cout<<"|            3. Gwangyoung Choi                                 |"<<endl;
+		cout<<"|                                                               |"<<endl;
+		cout<<"|                                                               |"<<endl;
+		cout<<"|                                                               |"<<endl;
+		cout<<"-----------------------------------------------------------------"<<endl;
 	}
 	
 	// 완성)#6. 게임 종료
@@ -245,7 +253,7 @@ public:
 	~BlackJack()
 	{}
 	
-	// 현재 게임하는 사람 로딩 : 성공하면 true, 실패하면 false 반환
+	// 테스트)현재 게임하는 사람 로딩 : 성공하면 true, 실패하면 false 반환
 	bool loadPlayer()
 	{
 		string playerName;
@@ -259,11 +267,11 @@ public:
 			cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
 			return false;
 		}
-		currentPlayer.setPlayer(Players[idx]); // player.h
+		currentPlayer.setPlayer(Players[idx]);
 		return true;
 	}
 
-	// 플레이어가 베팅하기 : 정상적으로 베팅되었으면 true 반환, 아니면 false 반환
+	// 테스트)플레이어가 베팅하기 : 정상적으로 베팅되었으면 true 반환, 아니면 false 반환
 	bool doBetting()
 	{
 		double money;
