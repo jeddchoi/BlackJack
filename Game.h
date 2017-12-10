@@ -634,12 +634,12 @@ public:
 						}
 						else
 						{
-							cout<<"You don't have enough money."
+							cout<<"You don't have enough money.";
 							return false;
 						}
 					case 'N':
 					case 'n':
-						return false
+						return false;
 					default:
 						continue;
 				}
@@ -673,7 +673,7 @@ public:
 						return true;
 					case 'N':
 					case 'n':
-						return false
+						return false;
 					default:
 						continue;
 				}

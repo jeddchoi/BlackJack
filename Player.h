@@ -42,9 +42,14 @@ public:
 		balance += money;
 	}
 	
-	void setPlayer()
-	{}
-	void showPlayerInfo()
+	void setPlayer(Player who)
+	{
+		this->name = who.name;
+		this->num = who.num;
+		this->balance = who.balance;
+		this->winingRate = who.winingRate;
+	}
+	void showPlayerInfo() // ??추가적인 코딩필요? 해당 내용의 목적이 궁금
 	{
 		cout<<"showPlayerInfo()"<<endl;
 	}
@@ -65,6 +70,7 @@ protected:
 	double Starting_balance;
 	double Bet;
 	double Sum;
+	double insurance;
 	
 	double accMinus;
 	double accPlus;
@@ -77,21 +83,41 @@ public:
 	~GamePlayer()
 	{}
 	
-	bool canBet()
+	bool canBet(int money)
 	{
-		return false;
+		if(this->balance >= money){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	double getBet()
+	{
+		return this->Bet;
+	}
+
+	double setInsurance(double insurance){
+		this->insurance = insurance;
 	}
 	
-	void setBet()
-	{}
-	void setCards()
+	void plusBet(int money) 
+	{
+		//this->balance -= money;
+		this->Bet += money;
+	}
+	void setCards() //노필요 인듯?
 	{}
 	void setStartingBalance()
-	{}
+	{
+		this->Starting_balance = this->balance;
+		this->balance -= this->Bet;
+	}
 	
 	double getStartingBalance()
 	{
-		return 0;
+		return this->Starting_balance;
 	}
 	double getAccMinus()
 	{
