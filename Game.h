@@ -323,8 +323,8 @@ public:
 	// 게임 시작시 두 장의 카드 받기
 	int getTwoCards()
 	{
-		currentPlayer.drawCards(deck);
-		Computer.drawCards(deck);
+		currentPlayer.drawTwoCards(deck);
+		Computer.drawACard(deck);
 		player_draw++;
 		
 		if(Computer.isOpenCardAce())
@@ -408,7 +408,7 @@ public:
 					// HIT
 					case 'H':
 					case 'h':
-						currentPlayer.drawCard(deck);
+						currentPlayer.drawACard(deck);
 						player_draw++;
 						showHand(currentPlayer);
 						if(currentPlayer.getCardSum() > 21)
@@ -431,7 +431,7 @@ public:
 							cout<<"You don't have enough money."<<endl;
 							continue;
 						}
-						currentPlayer.drawCard(deck);
+						currentPlayer.drawACard(deck);
 						player_draw++;
 						showHand(currentPlayer);
 						if(currentPlayer.getCardSum() > 21)
@@ -487,13 +487,13 @@ public:
 			int sum = Computer.getCardSum();
 			if(sum <= 16)
 			{
-				Computer.drawCard(deck);
+				Computer.drawACard(deck);
 				cont = true;
 			}
 			else if(sum >= 22)
 			{
 				cont = false;
-				cout<"Dealer burst!"<<endl;
+				cout<<"Dealer burst!"<<endl;
 				result = 2; // 딜러가 졌음
 			}
 			else
@@ -749,18 +749,21 @@ public:
 		
 		while(cont)
 		{
-			Computer.initHand(); // 딜러 핸드 초기화
 			deck.init(); // 52장 카드로 초기화한다.
 			deck.shuffleDeck(); // 덱의 카드들을 섞는다.
+			
 			currentPlayer.initGame(); // 카드와 베팅금액을 비운다.
 			Computer.initGame(); // 카드를 비운다.
+			
 			doBetting(); // player는 베팅을 한다.
 			int first_result = getTwoCards();
 			
 			showFirstCards();
+			int tmp1, tmp2, result;
 			switch (first_result)
 			{
-				case 1: // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
+				// 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
+				case 1:
 					if(wannaEvenMoney()) // 이븐 머니 한다면
 					{
 						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
@@ -776,7 +779,8 @@ public:
 							getResult(1); // 1번 결과로 처리
 						continue;
 					}
-				case 2: // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
+				// 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
+				case 2:
 					if(wannaInsurance())
 					{
 						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
@@ -784,41 +788,45 @@ public:
 							getResult(4); // 3번 결과로 처리
 						else // 딜러가 블랙잭이 아니면
 						{
-							int tmp = doDealerTurn();
-							getResult(tmp);
+							tmp1 = doDealerTurn();
+							getResult(tmp1);
 						}
 					}
 					else
 					{
-						int tmp = doPlayerTurn();
-						if(tmp == 1) // 플레이어가 stay해서 비교해야함
+						tmp1 = doPlayerTurn();
+						if(tmp1 == 1) // 플레이어가 stay해서 비교해야함
 						{
-							int tmp2 = compareSum(currentPlayer, Computer);
+							tmp2 = compareSum(currentPlayer, Computer);
 							if(tmp2 == 1) // 카드합 : 플레이어 > 딜러
 								result = 2; // 딜러가 졌음
 							else if(tmp2 == -1) // 카드합 : 플레이어 < 딜러
 								result = 5; // 플레이어가 졌음
 							else // 카드합 : 플레이어 == 딜러
 								result = 3; // 플레이어와 딜러 비김
-							getResult(tmp2);
+							getResult(result);
 						}
 						else // 플레이어가 버스트 혹은 서렌더한 경우
-							getResult(tmp);
+							getResult(tmp1);
 					}
 					continue; // 게임 종료
-				case 3: // 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
+				// 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
+				case 3:
 					getResult(3);
 					continue; // 게임 종료
-				case 4: // 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
-					int tmp = doDealerTurn();
-					getResult(tmp);
+				// 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
+				case 4:
+					tmp1 = doDealerTurn();
+					getResult(tmp1);
 					continue; // 게임 종료
-				case 5: // 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
+				// 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
+				case 5:
 					getResult(5);
 					continue; // 게임 종료
-				case 6: // 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
-					int tmp = doDealerTurn();
-					getResult(tmp);
+				// 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
+				case 6:
+					tmp1 = doDealerTurn();
+					getResult(tmp1);
 					continue; // 게임 종료
 				
 				default:

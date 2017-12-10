@@ -8,10 +8,10 @@ class Player
 {
 protected:
 	int num; // 등록순 인덱스
-    string name; // 플레이어 이름
-    double balance; // 잔고
+	string name; // 플레이어 이름
+	double balance; // 잔고
 	double winingRate; // 승률
-
+	
 public:
 	Player(int num, string name, double balance, double rate) : num(num), name(name), balance(balance), winingRate(rate)
 	{}
@@ -20,7 +20,7 @@ public:
 	{}
 	~Player()
 	{}
-
+	
 	int getNum() const
 	{
 		return num;
@@ -50,7 +50,7 @@ public:
 		this->balance = who.balance;
 		this->winingRate = who.winingRate;
 	}
-	void showPlayerInfo() 
+	void showPlayerInfo()
 	{
 		cout<<"플레이어 이름 : "<<this->name<<" 잔고 : "<< this->balance <<" 승률 : "<< this->winingRate <<endl;
 	}
@@ -67,7 +67,7 @@ bool cmpBalance(const Player &a, const Player &b){
 class GamePlayer : public Player
 {
 protected:
-	vector<Card> * Hand;
+	vector<Card> Hand;
 	double Starting_balance;
 	double Bet;
 	double Sum;
@@ -93,21 +93,21 @@ public:
 			return false;
 		}
 	}
-
+	
 	double getBet()
 	{
 		return this->Bet;
 	}
-
+	
 	void setInsurance(double insurance){
 		this->insurance = insurance;
 	}
-
+	
 	double getInsurance(){
 		return this->insurance;
 	}
 	
-	void plusBet(int money) 
+	void plusBet(int money)
 	{
 		this->balance -= money;
 		this->Bet += money;
@@ -132,39 +132,53 @@ public:
 	{
 		return 0;
 	}
-
+	
 	void drawTwoCards(Deck deck)
 	{
-		(this->Hand)->push_back(deck.getACard());
-		(this->Hand)->push_back(deck.getACard());
+		(this->Hand).push_back(deck.getACard());
+		(this->Hand).push_back(deck.getACard());
 	}
-
+	
 	void drawACard(Deck deck)
 	{
 		(this->Hand)->push_back(deck.getACard());
 	}
-
+	
 	void showFirstTwoCards()
 	{
-		cout<<"shape : "<<Card::getShape((this->Hand)->front().shp)<<" number : "<<Card::getNumber((this->Hand)->front().cardName)<<endl;
-		Card tmp = (this->Hand)->front();
-		(this->Hand)->pop_back();
-		cout<<"shape : "<<Card::getShape((this->Hand)->front().shp)<<" number : "<<Card::getNumber((this->Hand)->front().cardName)<<endl;
-		(this->Hand)->push_back(tmp);
+		cout<<"shape : "<<Hand[0].getShape((Hand)[0].shp)<<" number : "<<Hand[0].getNumber()<<endl;
+		cout<<"shape : "<<Hand[1].getShape((Hand)[1].shp)<<" number : "<<Hand[1].getNumber()<<endl;
 	}
-
+	
 	double getCardSum()
 	{
 		this->Sum = getSum(Hand);
 		return this->Sum;
 	}
-
+	
 	void initGame(){
 		this->Bet = 0;
-		(this->Hand)->clear();
+		(this->Hand).clear();
 	}
 	
+	bool isFirstCardsBJ()
+	{
+		this->Sum = getSum(Hand);
+		if(Sum == 21)
+		{
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
 	
+	void showHand(){
+		vector<Card>::iterator i;
+		for(i=Hand.begin(); i != Hand.end(); i++){
+			cout<<"shape : "<<(*i).getShape((*i).shp)<<" number : "<<(*i).getNumber()<<endl;
+		}
+	}
 };
 
 
@@ -174,7 +188,19 @@ class Dealer : public GamePlayer
 public:
 	
 	void showOpenCard(){
-		cout<<"shape : "<<Card::getShape((this->Hand)->front().shp)<<" number : "<<Card::getNumber((this->Hand)->front().cardName)<<endl;
+		cout<<"shape : "<<Hand[1].getShape(Hand[1].shp)<<" number : "<<Hand[1].getNumber()<<endl;
+	}
+	
+	void revealRestCard()
+	{
+		cout<<"shape : "<<Hand[0].getShape(Hand[0].shp)<<" number : "<<Hand[0].getNumber()<<endl;
+	}
+	
+	bool isOpenCardAce(){
+		if(Hand[0].getNumber() == 'A')
+			return true;
+		else
+			return false;
 	}
 	
 };

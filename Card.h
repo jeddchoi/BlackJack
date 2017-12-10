@@ -13,7 +13,7 @@ namespace CARD
 	const int SD_A = 2;
 	const int HE_A = 3;
 	const int CV_A = 4;
-
+	
 	/* 2 ~ 9 */
 	const int DI_2 = 12;
 	const int DI_3 = 13;
@@ -23,7 +23,7 @@ namespace CARD
 	const int DI_7 = 17;
 	const int DI_8 = 18;
 	const int DI_9 = 19;
-
+	
 	const int SD_2 = 22;
 	const int SD_3 = 23;
 	const int SD_4 = 24;
@@ -32,7 +32,7 @@ namespace CARD
 	const int SD_7 = 27;
 	const int SD_8 = 28;
 	const int SD_9 = 29;
-
+	
 	const int HE_2 = 32;
 	const int HE_3 = 33;
 	const int HE_4 = 34;
@@ -41,7 +41,7 @@ namespace CARD
 	const int HE_7 = 37;
 	const int HE_8 = 38;
 	const int HE_9 = 39;
-
+	
 	const int CV_2 = 42;
 	const int CV_3 = 43;
 	const int CV_4 = 44;
@@ -50,49 +50,49 @@ namespace CARD
 	const int CV_7 = 47;
 	const int CV_8 = 48;
 	const int CV_9 = 49;
-
+	
 	/* 10으로 계산되는 10, K, J, Q */
 	const int DI_10 = 100;
 	const int DI_K = 110;
 	const int DI_J = 120;
 	const int DI_Q = 130;
-
+	
 	const int SD_10 = 200;
 	const int SD_K = 210;
 	const int SD_J = 220;
 	const int SD_Q = 230;
-
+	
 	const int HE_10 = 300;
 	const int HE_K = 310;
 	const int HE_J = 320;
 	const int HE_Q = 330;
-
+	
 	const int CV_10 = 400;
 	const int CV_K = 410;
 	const int CV_J = 420;
 	const int CV_Q = 430;
-
+	
 }
 
 class Card
 {
 protected:
 	int value; // 실제로 적용되는 값
-
+	
 private:
 	int cards;
-
+	
 public:
 	int shp, number, cardName;
 	Card(int cards) { this->cards = number; }
 	Card() { cards = 52; }
 	~Card();
-
+	
 	void setCard(char shape, int number) {
-		Card::setShape(shape);
-		Card::setValue(number);
+		setShape(shape);
+		setValue(number);
 	}
-
+	
 	void setShape(char shape) {
 		if (shape == 'D')
 			shp = 1;
@@ -103,13 +103,13 @@ public:
 		else if (shape == 'C')
 			shp = 4;
 	}
-
+	
 	void setValue(int number) {
-		int sum = GamePlayer::Sum;
-
+		int sum;  //getSum으로 합계 불러와야행헹헹
+		
 		if (2 <= number && number <= 9) {
 			value = number;
-			Card::cardName = shp * 10 + value;
+			cardName = shp * 10 + value;
 		}
 		else if (number == 10 || number == 'K' || number == 'J' || number == 'Q') {
 			value = 10;
@@ -131,10 +131,10 @@ public:
 				value = 1;
 		}
 	}
-
+	
 	char getShape(int shp) {
 		char shape;
-
+		
 		if (shp == 1)
 			shape = 'D';
 		else if (shp == 2)
@@ -143,13 +143,13 @@ public:
 			shape = 'H';
 		else if (shp == 4)
 			shape = 'C';
-
+		
 		return shape;
 	}
-
+	
 	int getNumber() {
 		int number;
-
+		
 		if (cardName < 10)
 			number = 'A'; //65
 		else if (10 < cardName && cardName < 50)
@@ -164,11 +164,14 @@ public:
 			else if (cardName % 100 == 30)
 				number = 'Q'; //81
 		}
-
+		
 		return number;
 	}
-
-	int getValue() { return value; }
+	
+	int getValue() {
+		setValue();
+		return value;
+	}
 };
 
 class Deck
@@ -180,13 +183,13 @@ public:
 		init();
 	}
 	~Deck();
-
+	
 	void shuffleDeck() {
 		for (int i = 0; i < 100; i++) {
 			Card temp;
 			int left;
 			int right;
-
+			
 			left = rand() % CARD::CARDNUMBER;
 			right = rand() % CARD::CARDNUMBER;
 			temp = cards[left];
@@ -194,36 +197,36 @@ public:
 			cards[right] = temp;
 		}
 	}
-
+	
 	int getRemainCardsNum() {
 		return cards.size();
 	}
-
+	
 	Card getACard() {
 		Card card;
 		char shape;
 		if (cards.size() >= 1) {
 			card = cards[cards.size() - 1];
 			cards.pop_back();
-
+			
 			/*********************************
-			이부분은 안넣어도 되는걸까?
-
-			if(card < 10){
-			shape = Card::getShape(card);
-			Card::setCard(shape, card);
-			}
-			else if(10<card && card<50){
-			shape = Card::getShape(card/10);
-			Card::setCard(shape, card);
-			}
-			else if(100<card){
-			shape = Card::getShape(card/100);
-			Card::setCard(shape, card);
-			}
-
-			************************************/
-
+			 이부분은 안넣어도 되는걸까?
+			 
+			 if(card < 10){
+			 shape = Card::getShape(card);
+			 Card::setCard(shape, card);
+			 }
+			 else if(10<card && card<50){
+			 shape = Card::getShape(card/10);
+			 Card::setCard(shape, card);
+			 }
+			 else if(100<card){
+			 shape = Card::getShape(card/100);
+			 Card::setCard(shape, card);
+			 }
+			 
+			 ************************************/
+			
 		}
 		else {
 			cout << "There is no cards." << endl;
@@ -231,7 +234,7 @@ public:
 		}
 		return card;
 	}
-
+	
 	void init() {
 		int arr[52] = { 1, 2, 3, 4, 12, 13, 14, 15, 16, 17, 18, 19, 22, 23, 24, 25, 26, 27, 28, 29, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 100, 110, 120, 130, 200, 210, 220, 230, 300, 310, 320, 330, 400, 410, 420, 430 };
 		cards.clear();
@@ -240,3 +243,15 @@ public:
 		}
 	}
 };
+
+int getSum(vector <Card> &Hand) {
+	int num, sum = 0;
+	if (Hand.empty())
+		return 0;
+	
+	num = Hand.size();
+	for (int i = 0; i < num; i++) {
+		sum += Hand[i].getValue();
+	}
+	return sum;
+}
