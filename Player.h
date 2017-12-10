@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include "Card.h"
 using namespace std;
 
 class Player
@@ -49,9 +50,9 @@ public:
 		this->balance = who.balance;
 		this->winingRate = who.winingRate;
 	}
-	void showPlayerInfo() // ??추가적인 코딩필요? 해당 내용의 목적이 궁금
+	void showPlayerInfo() 
 	{
-		cout<<"showPlayerInfo()"<<endl;
+		cout<<"플레이어 이름 : "<<this->name<<" 잔고 : "<< this->balance <<" 승률 : "<< this->winingRate <<endl;
 	}
 };
 
@@ -98,13 +99,17 @@ public:
 		return this->Bet;
 	}
 
-	double setInsurance(double insurance){
+	void setInsurance(double insurance){
 		this->insurance = insurance;
+	}
+
+	double getInsurance(){
+		return this->insurance;
 	}
 	
 	void plusBet(int money) 
 	{
-		//this->balance -= money;
+		this->balance -= money;
 		this->Bet += money;
 	}
 	void setCards() //노필요 인듯?
@@ -127,6 +132,37 @@ public:
 	{
 		return 0;
 	}
+
+	void drawTwoCards(Deck deck)
+	{
+		(this->Hand)->push_back(deck.getACard());
+		(this->Hand)->push_back(deck.getACard());
+	}
+
+	void drawACard(Deck deck)
+	{
+		(this->Hand)->push_back(deck.getACard());
+	}
+
+	void showFirstTwoCards()
+	{
+		cout<<"shape : "<<Card::getShape((this->Hand)->front().shp)<<" number : "<<Card::getNumber((this->Hand)->front().cardName)<<endl;
+		Card tmp = (this->Hand)->front();
+		(this->Hand)->pop_back();
+		cout<<"shape : "<<Card::getShape((this->Hand)->front().shp)<<" number : "<<Card::getNumber((this->Hand)->front().cardName)<<endl;
+		(this->Hand)->push_back(tmp);
+	}
+
+	double getCardSum()
+	{
+		this->Sum = getSum(Hand);
+		return this->Sum;
+	}
+
+	void initGame(){
+		this->Bet = 0;
+		(this->Hand)->clear();
+	}
 	
 	
 };
@@ -137,5 +173,8 @@ class Dealer : public GamePlayer
 {
 public:
 	
+	void showOpenCard(){
+		cout<<"shape : "<<Card::getShape((this->Hand)->front().shp)<<" number : "<<Card::getNumber((this->Hand)->front().cardName)<<endl;
+	}
 	
 };

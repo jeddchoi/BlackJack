@@ -596,7 +596,7 @@ public:
 						return true;
 					case 'N':
 					case 'n':
-						return false
+						return false;
 					default:
 						continue;
 				}
