@@ -77,14 +77,13 @@ namespace CARD
 class Card
 {
 protected:
-	int cardName; // 카드 이름
 	int value; // 실제로 적용되는 값
 
 private:
 	int cards;
 
 public:
-	int shp, number;
+	int shp, number, cardName;
 	Card(int cards) { this->cards = number; }
 	Card() { cards = 52; }
 	~Card();
