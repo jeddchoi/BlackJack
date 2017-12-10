@@ -84,55 +84,52 @@ private:
 	
 public:
 	int shp, number, cardName;
-	Card(int cards) { this->cards = number; }
 	Card() { cards = 52; }
-	~Card();
+	~Card() {};
 	
-	void setCard(char shape, int number) {
-		setShape(shape);
-		setValue(number);
+	void setCard(int cardName) {
+		setShape(cardName);
+		setValue(cardName);
+		setNumber(cardName);
 	}
 	
-	void setShape(char shape) {
-		if (shape == 'D')
-			shp = 1;
-		else if (shape == 'S')
-			shp = 2;
-		else if (shape == 'H')
-			shp = 3;
-		else if (shape == 'C')
-			shp = 4;
-	}
-	
-	void setValue(int number) {
-		int sum;  //getSum으로 합계 불러와야행헹헹
-		
-		if (2 <= number && number <= 9) {
-			value = number;
-			cardName = shp * 10 + value;
+	void setShape(int cardName) {
+		if (cardName < 10)
+			shp = cardName;
+		else if (10 < cardName && cardName < 50)
+			shp = cardName / 10;
+		else if (50 < cardName) {
+			shp = cardName / 100;
 		}
-		else if (number == 10 || number == 'K' || number == 'J' || number == 'Q') {
+	}
+	
+	void setValue(int cardName) {
+		if (cardName < 10)
+			value = 11;                     // A를 무조건 11로 처리
+		else if (10 < cardName && cardName < 50)
+			value = cardName % 10;
+		else if (50 < cardName)
 			value = 10;
-			shp *= 100;
-			if (number == 10)
-				cardName = shp;
-			else if (number == 'K')
-				cardName = shp + 10;
-			else if (number == 'J')
-				cardName = shp + 20;
-			else if (number == 'Q')
-				cardName = shp + 30;
-		}
-		else if (number == 1) {
-			cardName = shp;
-			if (sum <= 10)
-				value = 11;
-			else
-				value = 1;
+	}
+	
+	void setNumber(int cardName) {
+		if (cardName < 10)
+			number = 'A';  //65
+		else if (10 < cardName && cardName < 50)
+			number = cardName % 10;
+		else if (50 < cardName) {
+			if (cardName % 100 == 0)
+				number = 10;
+			else if (cardName % 100 == 10)
+				number = 'K'; //75
+			else if (cardName % 100 == 20)
+				number = 'J'; //74
+			else if (cardName % 100 == 30)
+				number = 'Q'; //81
 		}
 	}
 	
-	char getShape(int shp) {
+	char getShape() {
 		char shape;
 		
 		if (shp == 1)
@@ -148,28 +145,10 @@ public:
 	}
 	
 	int getNumber() {
-		int number;
-		
-		if (cardName < 10)
-			number = 'A'; //65
-		else if (10 < cardName && cardName < 50)
-			number = cardName % 10;
-		else if (50 < cardName) {
-			if (cardName % 100 == 0)
-				number = 10;
-			else if (cardName % 100 == 10)
-				number = 'K'; //75
-			else if (cardName % 100 == 20)
-				number = 'J'; //74
-			else if (cardName % 100 == 30)
-				number = 'Q'; //81
-		}
-		
 		return number;
 	}
 	
 	int getValue() {
-		setValue();
 		return value;
 	}
 };
@@ -182,14 +161,15 @@ public:
 		cards.reserve(52);
 		init();
 	}
-	~Deck();
+	~Deck() {};
 	
 	void shuffleDeck() {
+		Card temp;
+		int left;
+		int right;
+		
 		for (int i = 0; i < 100; i++) {
-			Card temp;
-			int left;
-			int right;
-			
+			srand(time(NULL));
 			left = rand() % CARD::CARDNUMBER;
 			right = rand() % CARD::CARDNUMBER;
 			temp = cards[left];
@@ -202,47 +182,33 @@ public:
 		return cards.size();
 	}
 	
+	
 	Card getACard() {
 		Card card;
 		char shape;
 		if (cards.size() >= 1) {
 			card = cards[cards.size() - 1];
 			cards.pop_back();
-			
-			/*********************************
-			 이부분은 안넣어도 되는걸까?
-			 
-			 if(card < 10){
-			 shape = Card::getShape(card);
-			 Card::setCard(shape, card);
-			 }
-			 else if(10<card && card<50){
-			 shape = Card::getShape(card/10);
-			 Card::setCard(shape, card);
-			 }
-			 else if(100<card){
-			 shape = Card::getShape(card/100);
-			 Card::setCard(shape, card);
-			 }
-			 
-			 ************************************/
-			
+			card.Card::setCard(card.cardName);
 		}
 		else {
 			cout << "There is no cards." << endl;
-			return 0;
+			exit(-1);
 		}
 		return card;
 	}
 	
 	void init() {
+		Card new_card;
 		int arr[52] = { 1, 2, 3, 4, 12, 13, 14, 15, 16, 17, 18, 19, 22, 23, 24, 25, 26, 27, 28, 29, 32, 33, 34, 35, 36, 37, 38, 39, 42, 43, 44, 45, 46, 47, 48, 49, 100, 110, 120, 130, 200, 210, 220, 230, 300, 310, 320, 330, 400, 410, 420, 430 };
 		cards.clear();
 		for (int i = 0; i < 52; i++) {
-			cards.push_back(arr[i]);
+			new_card.cardName = arr[i];
+			cards.push_back(new_card);
 		}
 	}
 };
+
 
 int getSum(vector <Card> &Hand) {
 	int num, sum = 0;

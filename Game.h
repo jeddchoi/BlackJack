@@ -274,6 +274,7 @@ public:
 	// 테스트)플레이어가 베팅하기 : 정상적으로 베팅되었으면 true 반환, 아니면 false 반환
 	bool doBetting()
 	{
+		string input;
 		double money;
 		//-> Starting_Balance에 Balance를 백업하고 Balance에서 베팅금액을 뺀다.
 		currentPlayer.setStartingBalance();
@@ -282,12 +283,17 @@ public:
 		{
 			try{
 				cout<<"How much do you want to bet? :";
-				cin>>money;
+				cin>>input;
 				cin.ignore();
 				
-				if(!isdigit(money))
-					throw money;
-				
+				for(int i = 0; i < input.size(); i++)
+				{
+					if(input[i] =='.' || isdigit(input[i]))
+						continue;
+					else
+						throw input;
+				}
+				money = stod(input);
 				if(currentPlayer.canBet(money))
 				{
 					currentPlayer.plusBet(money); // 베팅금액을 덮어씌우는게 아니라 더해야 함.
@@ -301,9 +307,10 @@ public:
 					return false;
 				}
 			}
-			catch(char exception)
+			catch(string exception)
 			{
 				cout<<"Please Try Again."<<endl;
+				cout<<exception<<endl;
 				cin.clear();
 			}
 		}
@@ -324,31 +331,49 @@ public:
 	int getTwoCards()
 	{
 		currentPlayer.drawTwoCards(deck);
-		Computer.drawACard(deck);
+		Computer.drawTwoCards(deck);
 		player_draw++;
 		
 		if(Computer.isOpenCardAce())
 		{
 			if(currentPlayer.isFirstCardsBJ())
+			{
+				cout<<"딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우"<<endl;
 				return 1; // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
+			}
 			else
+			{
+				cout<<"딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우"<<endl;
 				return 2; // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
+			}
 		}
 		else
 		{
 			if(currentPlayer.isFirstCardsBJ())
 			{
 				if(Computer.isFirstCardsBJ())
+				{
+					cout<<"// 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우"<<endl;
 					return 3; // 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
+				}
 				else
+				{
+					cout<<"딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우"<<endl;
 					return 4; // 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
+				}
 			}
 			else
 			{
 				if(Computer.isFirstCardsBJ())
+				{
+					cout<<"딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우"<<endl;
 					return 5; // 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
+				}
 				else
+				{
+					cout<<"딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우"<<endl;
 					return 6; // 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
+				}
 				
 			}
 		}
@@ -694,19 +719,19 @@ public:
 		 3. 플레이어가 카드 1장 받고 딜러가 히든카드 1장 받는다. 그리고 다시 플레이어, 딜러 각각 1장씩 받는다.
 		 4. 각 패를 보여준다.
 		 5. 만약, 딜러의 오픈 카드가 에이스다. :
-		 1) 플레이어는 블랙잭이다. -> 이븐머니 여부를 묻는다.
-		 (1) 이븐머니 한다 -> 딜러의 히든카드를 보여준다.
-		 (a) 딜러가 블랙잭 여부 상관없이 -> 베팅금액 + 베팅금액(승리수당)을 받는다. -> 게임 끝(2)
-		 (2) 이븐머니 하지 않는다. -> 딜러의 히든카드를 보여준다.
-		 (a) 딜러가 블랙잭이다. -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
-		 (b) 딜러가 블랙잭이 아니다. -> 베팅금액 + 베팅금액*1.5를 받는다. -> 게임 끝(1)
-		 2) 플레이어가 블랙잭이 아니다. ->인슈런스 여부를 묻는다.
-		 (1) 인슈런스를 한다 -> (베팅액의 절반을 Balance에서 뺀다.) -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
-		 (a) 딜러가 블랙잭이다. -> 보험금 + 보험금*2 를 받는다. -> 게임 끝(4)
-		 (b) 딜러가 블랙잭이 아니다. -> 보험금은 잃고 딜러가 할일 한다.-> 결과에 따라 계산한다. -> 게임 끝
-		 (2) 인슈런스를 하지않는다. -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
-		 (a) 딜러가 블랙잭이다. -> 베팅금액을 잃는다. -> 게임 끝(5)
-		 (b) 딜러가 블랙잭이 아니다. -> 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
+		 	1) 플레이어는 블랙잭이다. -> 이븐머니 여부를 묻는다.
+		 		(1) 이븐머니 한다 -> 딜러의 히든카드를 보여준다.
+		 			(a) 딜러가 블랙잭 여부 상관없이 -> 베팅금액 + 베팅금액(승리수당)을 받는다. -> 게임 끝(2)
+		 		(2) 이븐머니 하지 않는다. -> 딜러의 히든카드를 보여준다.
+		 			(a) 딜러가 블랙잭이다. -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
+		 			(b) 딜러가 블랙잭이 아니다. -> 베팅금액 + 베팅금액*1.5를 받는다. -> 게임 끝(1)
+		 	2) 플레이어가 블랙잭이 아니다. ->인슈런스 여부를 묻는다.
+		 		(1) 인슈런스를 한다 -> (베팅액의 절반을 Balance에서 뺀다.) -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
+		 			(a) 딜러가 블랙잭이다. -> 보험금 + 보험금*2 를 받는다. -> 게임 끝(4)
+		 			(b) 딜러가 블랙잭이 아니다. -> 보험금은 잃고 딜러가 할일 한다.-> 결과에 따라 계산한다. -> 게임 끝
+		 		(2) 인슈런스를 하지않는다. -> 플레이어 할일 한다. -> 딜러의 히든카드를 보여준다.
+		 			(a) 딜러가 블랙잭이다. -> 베팅금액을 잃는다. -> 게임 끝(5)
+		 			(b) 딜러가 블랙잭이 아니다. -> 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
 		 - 딜러의 오픈카드가 에이스가 아니다. :
 		 1) 플레이어는 블랙잭이다.
 		 (1) 딜러도 블랙잭이다.(21) -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
@@ -768,7 +793,7 @@ public:
 					{
 						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
 						getResult(2); // 2번 결과로 처리
-						continue; // 게임 종료
+						break;
 					}
 					else
 					{
@@ -777,7 +802,7 @@ public:
 							getResult(3); // 3번 결과로 처리
 						else // 딜러가 블랙잭이 아니면
 							getResult(1); // 1번 결과로 처리
-						continue;
+						break;
 					}
 				// 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
 				case 2:
@@ -809,25 +834,25 @@ public:
 						else // 플레이어가 버스트 혹은 서렌더한 경우
 							getResult(tmp1);
 					}
-					continue; // 게임 종료
+					break; // 게임 종료
 				// 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
 				case 3:
 					getResult(3);
-					continue; // 게임 종료
+					break; // 게임 종료
 				// 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
 				case 4:
 					tmp1 = doDealerTurn();
 					getResult(tmp1);
-					continue; // 게임 종료
+					break; // 게임 종료
 				// 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
 				case 5:
 					getResult(5);
-					continue; // 게임 종료
+					break; // 게임 종료
 				// 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
 				case 6:
 					tmp1 = doDealerTurn();
 					getResult(tmp1);
-					continue; // 게임 종료
+					break; // 게임 종료
 				
 				default:
 					break;

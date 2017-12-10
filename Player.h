@@ -112,8 +112,7 @@ public:
 		this->balance -= money;
 		this->Bet += money;
 	}
-	void setCards() //노필요 인듯?
-	{}
+	
 	void setStartingBalance()
 	{
 		this->Starting_balance = this->balance;
@@ -133,21 +132,21 @@ public:
 		return 0;
 	}
 	
-	void drawTwoCards(Deck deck)
+	void drawTwoCards(Deck &deck)
 	{
 		(this->Hand).push_back(deck.getACard());
 		(this->Hand).push_back(deck.getACard());
 	}
 	
-	void drawACard(Deck deck)
+	void drawACard(Deck &deck)
 	{
-		(this->Hand)->push_back(deck.getACard());
+		(this->Hand).push_back(deck.getACard());
 	}
 	
 	void showFirstTwoCards()
 	{
-		cout<<"shape : "<<Hand[0].getShape((Hand)[0].shp)<<" number : "<<Hand[0].getNumber()<<endl;
-		cout<<"shape : "<<Hand[1].getShape((Hand)[1].shp)<<" number : "<<Hand[1].getNumber()<<endl;
+		cout<<"player's shape : "<<Hand[0].getShape()<<" player's number : "<<Hand[0].getNumber()<<endl;
+		cout<<"player's shape : "<<Hand[1].getShape()<<" player's number : "<<Hand[1].getNumber()<<endl;
 	}
 	
 	double getCardSum()
@@ -176,7 +175,7 @@ public:
 	void showHand(){
 		vector<Card>::iterator i;
 		for(i=Hand.begin(); i != Hand.end(); i++){
-			cout<<"shape : "<<(*i).getShape((*i).shp)<<" number : "<<(*i).getNumber()<<endl;
+			cout<<"player's shape : "<<(*i).getShape()<<" player's number : "<<(*i).getNumber()<<endl;
 		}
 	}
 };
@@ -188,19 +187,26 @@ class Dealer : public GamePlayer
 public:
 	
 	void showOpenCard(){
-		cout<<"shape : "<<Hand[1].getShape(Hand[1].shp)<<" number : "<<Hand[1].getNumber()<<endl;
+		cout<<"dealer's shape : "<<Hand[1].getShape()<<" dealer's number : "<<Hand[1].getNumber()<<endl;
 	}
 	
 	void revealRestCard()
 	{
-		cout<<"shape : "<<Hand[0].getShape(Hand[0].shp)<<" number : "<<Hand[0].getNumber()<<endl;
+		cout<<"dealer's shape : "<<Hand[0].getShape()<<" dealer's number : "<<Hand[0].getNumber()<<endl;
 	}
 	
 	bool isOpenCardAce(){
-		if(Hand[0].getNumber() == 'A')
+		if(Hand[1].getNumber() == 'A')
 			return true;
 		else
 			return false;
+	}
+	
+	void showHand(){
+		vector<Card>::iterator i;
+		for(i=Hand.begin(); i != Hand.end(); i++){
+			cout<<"dealer's shape : "<<(*i).getShape()<<" dealer's number : "<<(*i).getNumber()<<endl;
+		}
 	}
 	
 };
