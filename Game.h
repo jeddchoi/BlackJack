@@ -784,6 +784,7 @@ public:
 			int first_result = getTwoCards();
 			
 			showFirstCards();
+			cout<<"THIS"<<endl;
 			int tmp1, tmp2, result;
 			switch (first_result)
 			{

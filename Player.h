@@ -145,8 +145,15 @@ public:
 	
 	void showFirstTwoCards()
 	{
-		cout<<"player's shape : "<<Hand[0].getShape()<<" player's number : "<<Hand[0].getNumber()<<endl;
-		cout<<"player's shape : "<<Hand[1].getShape()<<" player's number : "<<Hand[1].getNumber()<<endl;
+		int tmp = Hand[0].getNumber();
+		if(tmp  > 10)
+			cout<<"player's shape : "<<Hand[0].getShape()<<" player's number : "<<(char)tmp<<endl;
+		else cout<<"player's shape : "<<Hand[0].getShape()<<" player's number : "<<tmp<<endl;
+		
+		tmp = Hand[1].getNumber();
+		if(tmp > 10)
+			cout<<"player's shape : "<<Hand[1].getShape()<<" player's number : "<<(char)tmp<<endl;
+		else cout<<"player's shape : "<<Hand[1].getShape()<<" player's number : "<<tmp<<endl;
 	}
 	
 	double getCardSum()
@@ -173,9 +180,14 @@ public:
 	}
 	
 	void showHand(){
+		int tmp=0;
 		vector<Card>::iterator i;
 		for(i=Hand.begin(); i != Hand.end(); i++){
-			cout<<"player's shape : "<<(*i).getShape()<<" player's number : "<<(*i).getNumber()<<endl;
+			tmp = (*i).getNumber();
+			if(tmp > 10)
+				cout<<"player's shape : "<<(*i).getShape()<<" player's number : "<<(char)tmp<<endl;
+			else
+				cout<<"player's shape : "<<(*i).getShape()<<" player's number : "<<tmp<<endl;
 		}
 	}
 };
@@ -187,12 +199,18 @@ class Dealer : public GamePlayer
 public:
 	
 	void showOpenCard(){
-		cout<<"dealer's shape : "<<Hand[1].getShape()<<" dealer's number : "<<Hand[1].getNumber()<<endl;
+		int tmp = Hand[1].getNumber();
+		if(tmp > 10)
+			cout<<"dealer's shape : "<<Hand[1].getShape()<<" dealer's number : "<<(char)tmp<<endl;
+		else cout<<"dealer's shape : "<<Hand[1].getShape()<<" dealer's number : "<<tmp<<endl;
 	}
 	
 	void revealRestCard()
 	{
-		cout<<"dealer's shape : "<<Hand[0].getShape()<<" dealer's number : "<<Hand[0].getNumber()<<endl;
+		int tmp = Hand[0].getNumber();
+		if(tmp > 10)
+			cout<<"dealer's shape : "<<Hand[0].getShape()<<" dealer's number : "<<(char)tmp<<endl;
+		else cout<<"dealer's shape : "<<Hand[0].getShape()<<" dealer's number : "<<tmp<<endl;
 	}
 	
 	bool isOpenCardAce(){
@@ -203,9 +221,14 @@ public:
 	}
 	
 	void showHand(){
+		int tmp=0;
 		vector<Card>::iterator i;
 		for(i=Hand.begin(); i != Hand.end(); i++){
-			cout<<"dealer's shape : "<<(*i).getShape()<<" dealer's number : "<<(*i).getNumber()<<endl;
+			tmp = (*i).getNumber();
+			if(tmp > 10)
+				cout<<"dealer's shape : "<<(*i).getShape()<<" dealer's number : "<<(char)tmp<<endl;
+			else
+				cout<<"dealer's shape : "<<(*i).getShape()<<" dealer's number : "<<tmp<<endl;
 		}
 	}
 	
