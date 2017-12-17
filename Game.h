@@ -10,6 +10,12 @@
 
 
 using namespace std;
+
+void printLine()
+{
+	cout<<"-----------------------------------------------------------------"<<endl;
+}
+
 class Game
 {
 protected:
@@ -121,18 +127,39 @@ public:
 	 */
 		string playerName;
 		
-		cout<<"Enter your name. : ";
-		cin>>playerName;
-		if( getRegisteredPlayerIdx(playerName) != -1 )
+		while(true)
 		{
-			cout<<endl<<"You already have registered you name."<<endl;
-			return;
-		}
-		else
-		{
-			Player newPlayer((unsigned int)Players.size(), playerName, 0);
-			Players.push_back(newPlayer);
-			fillUp(playerName);
+			try{
+				cout<<"Enter your name. : ";
+				cin>>playerName;
+				cin.ignore();
+				
+				for(int i = 0; i < playerName.size(); i++)
+				{
+					if(isalnum(playerName[i]))
+						continue;
+					else
+						throw playerName;
+				}
+				if( getRegisteredPlayerIdx(playerName) != -1 )
+				{
+					cout<<endl<<"You already have registered you name."<<endl;
+					throw playerName;
+				}
+				else
+				{
+					Player newPlayer((unsigned int)Players.size(), playerName, 0);
+					Players.push_back(newPlayer);
+					fillUp(playerName);
+					return;
+				}
+				
+			}
+			catch(...)
+			{
+				cout<<"Please Try Again."<<endl;
+				cin.clear();
+			}
 		}
 	}
 	
@@ -178,25 +205,82 @@ public:
 	 2. 새로운 플레이어 등록, 혹은 게임 중에서 들어온 경우 : playerName != "" 이다.
 	     충전할 금액 입력 받아서 Players의 end()의 잔고를 업데이트 한 후 메뉴 첫화면으로 return
 	 */
+		string money;
+		double money_value;
+		int idx;
 		
 		if(playerName == "")
 		{
-			cout<<"Enter your name. : ";
-			cin>>playerName;
+			while(true)
+			{
+				try {
+						cout<<"Enter your name. : ";
+						cin>>playerName;
+						cin.ignore();
+					
+						for(int i = 0; i < playerName.size(); i++)
+						{
+							if(isalnum(playerName[i]))
+								continue;
+							else
+								throw playerName;
+						}
+					
+						idx = getRegisteredPlayerIdx(playerName);
+						if( idx == -1 )
+						{
+							cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
+							throw playerName;
+						}
+					break;
+				}
+				catch (...)
+				{
+					
+					cout<<"Please Try Again."<<endl;
+					cin.clear();
+				}
+			}
 		}
 		
-		int idx = getRegisteredPlayerIdx(playerName);
-		if( idx == -1 )
+		idx = getRegisteredPlayerIdx(playerName);
+		while(true)
 		{
-			cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
-			return;
+			try{
+				
+				
+				cout<<"Enter the amount as you want to charge. : ";
+				cin>>money;
+				cin.ignore();
+				int cnt = 0;
+				for(int i = 0; i < money.size(); i++)
+				{
+					if(money[i] =='.' && cnt == 0)
+					{
+						cnt++;
+						continue;
+					}
+					else if(isnumber(money[i]))
+						continue;
+					else
+						throw money;
+				}
+				
+				money_value = stod(money);
+				if(money_value <= 0)
+					throw money_value;
+				
+				break;
+				
+			}
+			catch(...)
+			{
+				cout<<"Please Try Again."<<endl;
+				cin.clear();
+			}
 		}
 		
-		double money;
-		cout<<"Enter the amount as you want to charge. : ";
-		cin>>money;
-		
-		Players[idx].setBalance(money);
+		Players[idx].setBalance(money_value);
 		Players[idx].showPlayerInfo(); // 업데이트 된 정보 출력
 	}
 	
@@ -230,10 +314,7 @@ public:
 		cout<<"Thank you for playing."<<endl;
 	}
 	
-	void printLine()
-	{
-		cout<<"-----------------------------------------------------------------"<<endl;
-	}
+	
 };
 
 class BlackJack : public Game
@@ -256,15 +337,37 @@ public:
 	bool loadPlayer()
 	{
 		string playerName;
-		cout<<"Enter your name. : ";
-		cin>>playerName;
 		
-		int idx = getRegisteredPlayerIdx(playerName);
-		
-		if( idx == -1 )
+		int idx;
+		while(true)
 		{
-			cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
-			return false;
+			try {
+				cout<<"Enter your name. : ";
+				cin>>playerName;
+				cin.ignore();
+				
+				for(int i = 0; i < playerName.size(); i++)
+				{
+					if(isalnum(playerName[i]))
+						continue;
+					else
+						throw playerName;
+				}
+				
+				idx = getRegisteredPlayerIdx(playerName);
+				if( idx == -1 )
+				{
+					cout<<endl<<"Your Name ["<<playerName<<"] does not exist. "<<endl;
+					throw playerName;
+				}
+				break;
+			}
+			catch (...)
+			{
+				
+				cout<<"Please Try Again."<<endl;
+				cin.clear();
+			}
 		}
 		currentPlayer.setPlayer(Players[idx]);
 		return true;
@@ -381,9 +484,11 @@ public:
 		
 		cout<<"1. Stay.(S or s)"<<endl;
 		cout<<"2. Hit.(H or h)"<<endl;
-		cout<<"3. Double down.(D or d)"<<endl;
 		if(player_draw == 1)
+		{
+			cout<<"3. Double down.(D or d)"<<endl;
 			cout<<"4. Surrender. (G or g)"<<endl;
+		}
 		printLine();
 	}
 	
@@ -792,7 +897,10 @@ public:
 		if(loadPlayer()) // 이름 입력 받아서 플레이어 정보를 로딩한다.
 			cont = true;
 		else
+		{
+			cont = false;
 			return;
+		}
 		
 		while(cont)
 		{
@@ -855,6 +963,7 @@ public:
 					}
 					else // 인슈런스 하지 않겠다.
 					{
+						wannaNextStage();
 						printf("인슈런스하지 않겠다.\n");
 						after_player = doPlayerTurn();
 						if(after_player == 1) // 플레이어가 stay해서 비교해야함
@@ -878,6 +987,7 @@ public:
 					}
 					break;
 				case 3:
+					wannaNextStage();
 					after_dealer = doDealerTurn();
 					if(after_dealer == 7)
 					{
@@ -889,6 +999,7 @@ public:
 					}
 					break;
 				case 4:
+					wannaNextStage();
 					after_player = doPlayerTurn();
 					if(after_player == 1)
 					{
