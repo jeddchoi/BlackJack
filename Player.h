@@ -86,6 +86,7 @@ public:
 		}
 	}
 	
+	
 	double getBet()
 	{
 		return this->Bet;
@@ -132,13 +133,13 @@ public:
 		cout<<"[ Player ]"<<endl;
 		Hand[0].getShape();
 		Hand[1].getShape();
-		cout<<"[ "<<getSum(Hand)<<" ]"<<endl;
+		cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
 		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
 	
 	double getCardSum()
 	{
-		this->Sum = getSum(Hand);
+		this->Sum = getSum<int>(Hand);
 		return this->Sum;
 	}
 	
@@ -149,7 +150,7 @@ public:
 	
 	bool isFirstCardsBJ()
 	{
-		this->Sum = getSum(Hand);
+		this->Sum = getSum<int>(Hand);
 		if(Sum == 21)
 		{
 			return true;
@@ -165,12 +166,37 @@ public:
 		for(i=Hand.begin(); i != Hand.end(); i++){
 			(*i).getShape();
 		}
-		cout<<"[ "<<getSum(Hand)<<" ]"<<endl;
+		cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
 		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
 };
 
+// 딜러 카드의 합과 플레이어 카드의 합 비교
+bool operator>(GamePlayer& p1, GamePlayer& p2)
+{
+	int sum1 = p1.getCardSum();
+	int sum2 = p2.getCardSum();
+	
+	if(sum1 < sum2)
+		return false;
+	else if(sum1 > sum2)
+		return true;
+	else
+		return false;
+}
 
+bool operator==(GamePlayer& p1, GamePlayer& p2)
+{
+	int sum1 = p1.getCardSum();
+	int sum2 = p2.getCardSum();
+	
+	if(sum1 < sum2)
+		return false;
+	else if(sum1 > sum2)
+		return false;
+	else
+		return true;
+}
 
 class Dealer : public GamePlayer
 {
@@ -196,7 +222,7 @@ public:
 		for(i=Hand.begin(); i != Hand.end(); i++){
 			(*i).getShape();
 		}
-		cout<<"[ "<<getSum(Hand)<<" ]"<<endl;
+		cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
 		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
 };

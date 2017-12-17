@@ -87,7 +87,14 @@ public:
 	int shp, number, cardName;
 	Card() { cards = 52; }
 	~Card() {};
-	
+	Card(const Card & ca)
+	{
+		value = ca.value;
+		cards = ca.cards;
+		shp = ca.shp;
+		number = ca.number;
+		cardName = ca.cardName;
+	}
 	void setCard(int cardName) {
 		setShape(cardName);
 		setValue(cardName);
@@ -245,32 +252,19 @@ public:
 	}
 	~Deck() {};
 	
-	void shuffleDeck() {
-		Card temp;
-		int left;
-		int right;
-		
-		for (int i = 0; i < 100; i++) {
-			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-			shuffle(cards.begin(), cards.end(), std::default_random_engine(seed));
-			
-//			srand(time(NULL));
-//			left = rand() % CARD::CARDNUMBER;
-//			right = rand() % CARD::CARDNUMBER;
-//			temp = cards[left];
-//			cards[left] = cards[right];
-//			cards[right] = temp;
-		}
+	void shuffleDeck()
+	{
+		unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
+		shuffle(cards.begin(), cards.end(), std::default_random_engine(seed));
 	}
 	
 	int getRemainCardsNum() {
-		return cards.size();
+		return (int)cards.size();
 	}
 	
 	
 	Card getACard() {
 		Card card;
-		char shape;
 		if (cards.size() >= 1) {
 			card = cards[cards.size() - 1];
 			cards.pop_back();
@@ -294,13 +288,13 @@ public:
 	}
 };
 
-
-int getSum(vector <Card> &Hand) {
-	int num, sum = 0;
+template <typename T>
+T getSum(vector <Card> &Hand) {
+	T num, sum = 0;
 	if (Hand.empty())
 		return 0;
 	
-	num = Hand.size();
+	num = (int)Hand.size();
 	for (int i = 0; i < num; i++) {
 		sum += Hand[i].getValue();
 	}

@@ -423,11 +423,7 @@ public:
 		Computer.showOpenCard();
 		currentPlayer.showFirstTwoCards();
 	}
-	
-	void showHand(GamePlayer p) // 딜러인지 플레이어 인지 인수로 받아서 핸드에 가지고 있는 모든 카드를 보여준다.
-	{
-		p.showHand();
-	}
+
 	
 	// 게임 시작시 두 장의 카드 받기
 	int getTwoCards()
@@ -531,7 +527,7 @@ public:
 					case 'h':
 						currentPlayer.drawACard(deck);
 						player_draw++;
-						showHand(currentPlayer);
+						currentPlayer.showHand();
 						if(currentPlayer.getCardSum() > 21)
 						{
 							result = 5; // BURST
@@ -554,7 +550,7 @@ public:
 						}
 						currentPlayer.drawACard(deck);
 						player_draw++;
-						showHand(currentPlayer);
+						currentPlayer.showHand();
 						if(currentPlayer.getCardSum() > 21)
 						{
 							result = 5; //BURST
@@ -593,7 +589,7 @@ public:
 	{
 		int result = -1;
 		
-		showHand(Computer);
+		Computer.showHand();
 		if(Computer.isFirstCardsBJ())
 			return 7;
 		bool cont = true;
@@ -604,7 +600,7 @@ public:
 			if(sum <= 16)
 			{
 				Computer.drawACard(deck);
-				showHand(Computer);
+				Computer.showHand();
 				cont = true;
 			}
 			else if(sum >= 22)
@@ -616,30 +612,17 @@ public:
 			else
 			{
 				cont = false;
-				int tmp = compareSum(currentPlayer, Computer);
-				if(tmp == 1) // 카드합 : 플레이어 > 딜러
-					result = 2; // 딜러가 졌음
-				else if(tmp == -1) // 카드합 : 플레이어 < 딜러
-					result = 5; // 플레이어가 졌음
-				else // 카드합 : 플레이어 == 딜러
+				if(currentPlayer == Computer)// 카드합 : 플레이어 == 딜러
 					result = 3; // 플레이어와 딜러 비김
+				else if(currentPlayer > Computer) // 카드합 : 플레이어 > 딜러
+					result = 2; // 딜러가 졌음
+				else // 카드합 : 플레이어 < 딜러
+					result = 5; // 플레이어가 졌음
 			}
 		}
 		return result;
 	}
-	// 딜러 카드의 합과 플레이어 카드의 합 비교
-	int compareSum(GamePlayer& p1, GamePlayer& p2)
-	{
-		int sum1 = p1.getCardSum();
-		int sum2 = p2.getCardSum();
-		
-		if(sum1 < sum2)
-			return -1;
-		else if(sum1 > sum2)
-			return 1;
-		else
-			return 0;
-	}
+	
 	
 	// 어떤 케이스냐에 따라 처리하는 결과가 달라짐
 	void getResult(int result)
@@ -1001,7 +984,6 @@ public:
 					}
 					break;
 				case 4:
-					wannaNextStage();
 					after_player = doPlayerTurn();
 					if(after_player == 1)
 					{
