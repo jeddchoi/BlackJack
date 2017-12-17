@@ -39,12 +39,11 @@ public:
 		int num;
 		string playerName;
 		double balance;
-		double winningRate;
 		
 		for(int i = 0; i < numofplayers; i++ )
 		{
-			fin>>num>>playerName>>balance>>winningRate;
-			Players.push_back(Player(num, playerName, balance, winningRate));
+			fin>>num>>playerName>>balance;
+			Players.push_back(Player(num, playerName, balance));
 		}
 		fin.close();
 	}
@@ -61,7 +60,7 @@ public:
 		
 		for(int i = 0; i < Players.size(); i++ )
 		{
-			fout<<Players[i].getNum()<<" "<<Players[i].getName()<<" "<<Players[i].getBalance()<<" "<<Players[i].getRate()<<endl;
+			fout<<Players[i].getNum()<<" "<<Players[i].getName()<<" "<<Players[i].getBalance()<<endl;
 		}
 		fout.close();
 	}
@@ -131,7 +130,7 @@ public:
 		}
 		else
 		{
-			Player newPlayer((unsigned int)Players.size(), playerName, 0, 0);
+			Player newPlayer((unsigned int)Players.size(), playerName, 0);
 			Players.push_back(newPlayer);
 			fillUp(playerName);
 		}
@@ -150,19 +149,19 @@ public:
 	{
 	/*
 	 벡터로 선언된 Players의 랭킹 출력
-	 1. 순번 2. 이름 3. 잔고 4. 승률
+	 1. 순번 2. 이름 3. 잔고
 	 */
 		sort(Players.begin(), Players.end(), cmpBalance);
 		
 		cout.setf(ios::left, ios::adjustfield);
 		
 		printLine();
-		cout<<setw(4)<<"Num"<<setw(20)<<"Player's name"<<setw(10)<<"Balance"<<setw(10)<<"Wining Rate"<<endl;
+		cout<<setw(4)<<"Num"<<setw(20)<<"Player's name"<<setw(10)<<"Balance"<<endl;
 		printLine();
 		for(int i = 0; i < Players.size(); i++ )
 		{
 			cout<<setw(4)<<Players[i].getNum()<<setw(20)<<Players[i].getName();
-			cout<<setw(10)<<Players[i].getBalance()<<setw(10)<<Players[i].getRate()<<endl;
+			cout<<setw(10)<<Players[i].getBalance()<<endl;
 		}
 		printLine();
 		
@@ -336,45 +335,37 @@ public:
 		
 		if(Computer.isOpenCardAce())
 		{
+			Computer.showOpenCard();
+//			cout<<"딜러의 오픈카드 에이스"<<endl;
 			if(currentPlayer.isFirstCardsBJ())
 			{
-				cout<<"딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우"<<endl;
-				return 1; // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
+				currentPlayer.showFirstTwoCards();
+//				cout<<"플레이어가 블랙잭입니다."<<endl;
+				return 1;
 			}
 			else
 			{
-				cout<<"딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우"<<endl;
-				return 2; // 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
+				currentPlayer.showFirstTwoCards();
+//				cout<<"플레이어가 블랙잭이 아닙니다."<<endl;
+				return 2;
 			}
+				
 		}
 		else
 		{
+			Computer.showOpenCard();
+//			cout<<"딜러의 오픈카드 에이스가 아닙니다."<<endl;
 			if(currentPlayer.isFirstCardsBJ())
 			{
-				if(Computer.isFirstCardsBJ())
-				{
-					cout<<"// 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우"<<endl;
-					return 3; // 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
-				}
-				else
-				{
-					cout<<"딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우"<<endl;
-					return 4; // 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
-				}
+				currentPlayer.showFirstTwoCards();
+//				cout<<"플레이어가 블랙잭입니다."<<endl;
+				return 3;
 			}
 			else
 			{
-				if(Computer.isFirstCardsBJ())
-				{
-					cout<<"딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우"<<endl;
-					return 5; // 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
-				}
-				else
-				{
-					cout<<"딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우"<<endl;
-					return 6; // 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
-				}
-				
+				currentPlayer.showFirstTwoCards();
+//				cout<<"플레이어가 블랙잭이 아닙니다."<<endl;
+				return 4;
 			}
 		}
 	}
@@ -466,7 +457,8 @@ public:
 						}
 						else
 						{
-							continue;
+							result = 1;
+							break;
 						}
 					
 					// SURRENDER if
@@ -494,25 +486,20 @@ public:
 	// 딜러 턴에 할 일 : 플레이어가 할일 다 한 경우
 	int doDealerTurn()
 	{
-		/*
-		* 딜러가 할일 :(딜러의 오픈카드가 에이스인 경우, 딜러가 블랙잭인 경우는 이미 다뤄졌음)
-		** 히든카드를 출력한다.
-		(1) 합이 16 이하다. -> 추가 카드를 획득한다. -> 추가 카드를 출력한다. -> 다시 분기로 이동
-		(2) 합이 22 이상이다. -> 딜러가 버스트했으므로 플레이어는 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
-		(3) 합이 21 이하이다. -> 플레이어의 카드 합과 비교한다.
-		 	(a) 플레이어가 합이 더 크다. -> 플레이어가 이겼으므로 베팅금액 + 베팅금액을 받는다. -> 게임 끝(2)
-		 	(b) 딜러가 합이 더 크다. -> 플레이어는 베팅금액을 잃는다. -> 게임 끝(5)
-		 	(c) 합이 같다. -> push이므로 베팅금액만 그대로 돌려받는다. -> 게임 끝(3)
-		 */
 		int result = -1;
+		
+		showHand(Computer);
+		if(Computer.isFirstCardsBJ())
+			return 7;
 		bool cont = true;
 		while(cont)
 		{
-			showHand(Computer);
+			
 			int sum = Computer.getCardSum();
 			if(sum <= 16)
 			{
 				Computer.drawACard(deck);
+				showHand(Computer);
 				cont = true;
 			}
 			else if(sum >= 22)
@@ -711,6 +698,38 @@ public:
 			}
 		}
 	}
+	
+	bool wannaNextStage()
+	{
+		cout<<"Continue?(Y) :";
+		char response;
+		while(true)
+		{
+			try{
+				// 메뉴 선택
+				cin>>response;
+				cin.ignore();
+				
+				if(!isalpha(response))
+					throw response;
+				
+				switch (response) {
+					case 'Y':
+					case 'y':
+						return true;
+					default:
+						continue;
+				}
+				break;
+			}
+			catch(char exception)
+			{
+				cout<<"Please Try Again."<<endl;
+				cin.clear();
+			}
+		}
+	}
+	
 	virtual void startGame()
 	{
 		/*
@@ -733,13 +752,16 @@ public:
 		 			(a) 딜러가 블랙잭이다. -> 베팅금액을 잃는다. -> 게임 끝(5)
 		 			(b) 딜러가 블랙잭이 아니다. -> 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
 		 - 딜러의 오픈카드가 에이스가 아니다. :
-		 1) 플레이어는 블랙잭이다.
-		 (1) 딜러도 블랙잭이다.(21) -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
-		 (2) 딜러가 할일한다. -> 결과에 따라 계산한다. -> 게임 끝
-		 2) 플레이어가 블랙잭이 아니다.
-		 (1) 딜러는 블랙잭이다.(21) -> 딜러가 이겼다. -> 게임 끝
-		 
-		 (2) 딜러가 할일 한다. -> 결과에 따라 계산한다. -> 게임 끝
+		 	1) 플레이어는 블랙잭이다.
+		 		(1) 딜러도 블랙잭이다.(21) -> push이므로(비겼으므로) 베팅금액만을 그대로 다시 돌려 받는다. -> 게임 끝(3)
+		 		(2) 딜러는 블랙잭이 아니다 -> 딜러가 할일한다. -> 결과에 따라 계산한다. -> 게임 끝
+		 	2) 플레이어가 블랙잭이 아니다.
+		 		(1) 플레이어가 할일 한후
+		 			(a) 결과가 1인 경우
+		 				> 딜러는 블랙잭이다.(21) -> 딜러가 이겼다. -> 게임 끝
+		 				> 딜러가 블랙잭이 아니다.
+							> 딜러가 할일 한후 ->  결과에 따라 처리 -> 게임 끝
+		 			(b) 결과가 5혹은 6인 경우 -> 게임 종료(5)
 		 
 		 6. 게임끝이면 다시 게임할건지 묻는다.
 		 1) 다시 할거다. -> 1.로 간다.
@@ -779,96 +801,127 @@ public:
 			
 			currentPlayer.initGame(); // 카드와 베팅금액을 비운다.
 			Computer.initGame(); // 카드를 비운다.
-			
+			player_draw = 0;
 			doBetting(); // player는 베팅을 한다.
 			int first_result = getTwoCards();
 			
-			showFirstCards();
-			cout<<"THIS"<<endl;
-			int tmp1, tmp2, result;
+//			showFirstCards();
+			int after_player, after_dealer;
+			
 			switch (first_result)
 			{
-				// 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭인 경우
 				case 1:
+					wannaNextStage();
 					if(wannaEvenMoney()) // 이븐 머니 한다면
 					{
-						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
+						printf("이븐 머니하겠다.\n");
+						Computer.showHand(); // 딜러의 히든 카드를 보여줌
 						getResult(2); // 2번 결과로 처리
-						break;
 					}
 					else
 					{
-						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
+						printf("이븐 머니하지 않겠다.\n");
+						Computer.showHand(); // 딜러의 히든 카드를 보여줌
 						if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
 							getResult(3); // 3번 결과로 처리
 						else // 딜러가 블랙잭이 아니면
 							getResult(1); // 1번 결과로 처리
-						break;
 					}
-				// 딜러의 오픈카드가 에이스이고, 플레이어가 블랙잭이 아닌 경우
+					break;
 				case 2:
+					wannaNextStage();
 					if(wannaInsurance())
 					{
-						Computer.revealRestCard(); // 딜러의 히든 카드를 보여줌
-						if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
-							getResult(4); // 3번 결과로 처리
-						else // 딜러가 블랙잭이 아니면
+						printf("인슈런스하겠다.\n");
+						after_player = doPlayerTurn();
+						if(after_player == 1) // 플레이어가 stay한 경우
 						{
-							tmp1 = doDealerTurn();
-							getResult(tmp1);
+							if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
+							{
+								Computer.showHand(); // 딜러의 히든 카드를 보여줌
+								getResult(4); // 4번 결과로 처리
+							}
+							else // 딜러가 블랙잭이 아니면 보험금은 버리고
+							{
+								after_dealer = doDealerTurn();
+								getResult(after_dealer);
+							}
+						}
+						else // 플레이어가 burst, surrender한 경우
+						{
+							Computer.showHand(); // 딜러의 히든 카드를 보여줌
+							getResult(after_player);
+						}
+					}
+					else // 인슈런스 하지 않겠다.
+					{
+						printf("인슈런스하지 않겠다.\n");
+						after_player = doPlayerTurn();
+						if(after_player == 1) // 플레이어가 stay해서 비교해야함
+						{
+							if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
+							{
+								Computer.showHand(); // 딜러의 히든 카드를 보여줌
+								getResult(5); // 5번 결과로 처리
+							}
+							else
+							{
+								after_dealer = doDealerTurn();
+								getResult(after_dealer);
+							}
+						}
+						else
+						{
+							Computer.showHand(); // 딜러의 히든 카드를 보여줌
+							getResult(after_player);
+						}
+					}
+					break;
+				case 3:
+					after_dealer = doDealerTurn();
+					if(after_dealer == 7)
+					{
+						getResult(3);
+					}
+					else
+					{
+						getResult(after_dealer);
+					}
+					break;
+				case 4:
+					after_player = doPlayerTurn();
+					if(after_player == 1)
+					{
+						after_dealer = doDealerTurn();
+						if(after_dealer == 7)
+						{
+							getResult(5);
+						}
+						else
+						{
+							getResult(after_dealer);
 						}
 					}
 					else
 					{
-						tmp1 = doPlayerTurn();
-						if(tmp1 == 1) // 플레이어가 stay해서 비교해야함
-						{
-							tmp2 = compareSum(currentPlayer, Computer);
-							if(tmp2 == 1) // 카드합 : 플레이어 > 딜러
-								result = 2; // 딜러가 졌음
-							else if(tmp2 == -1) // 카드합 : 플레이어 < 딜러
-								result = 5; // 플레이어가 졌음
-							else // 카드합 : 플레이어 == 딜러
-								result = 3; // 플레이어와 딜러 비김
-							getResult(result);
-						}
-						else // 플레이어가 버스트 혹은 서렌더한 경우
-							getResult(tmp1);
+						Computer.showHand(); // 딜러의 히든 카드를 보여줌
+						getResult(after_player);
 					}
-					break; // 게임 종료
-				// 딜러의 오픈카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭인 경우
-				case 3:
-					getResult(3);
-					break; // 게임 종료
-				// 딜러의 오픈카드가 에이스 아니고, 플레이어는 블랙잭인데 딜러는 블랙잭이 아닌 경우
-				case 4:
-					tmp1 = doDealerTurn();
-					getResult(tmp1);
-					break; // 게임 종료
-				// 딜러의 오픈 카드가 에이스가 아니고, 플레이어는 블랙잭이 아닌데 딜러가 블랙잭인 경우
-				case 5:
-					getResult(5);
-					break; // 게임 종료
-				// 딜러의 오픈 카드가 에이스가 아니고, 플레이어와 딜러 둘다 블랙잭이 아닌 경우
-				case 6:
-					tmp1 = doDealerTurn();
-					getResult(tmp1);
-					break; // 게임 종료
-				
+					break;
 				default:
 					break;
 			}
 			
+			
 			if(wannaRestart())
 			{
 				cont = true;
-				
+				cout<<"다시 시작합니다..."<<endl;
 			}
 			else
 				cont = false;
 		}
 		updatePlayer();
-		showGameResult();
 	}
 	
 	// Players에 이번 플레이어의 정보 업데이트
@@ -876,16 +929,5 @@ public:
 	{
 		int idx = getRegisteredPlayerIdx(currentPlayer.getName());
 		Players[idx].setPlayer(currentPlayer);
-	}
-	
-	// 이번 게임 종료시 결과 출력
-	void showGameResult()
-	{
-	/*
-	 1. 이름
-	 2. 잔고
-	 3. 누적 획득 금액 (최종으로 잃었을 경우 -로 표시)
-	 5. 랭킹
-	 */
 	}
 };

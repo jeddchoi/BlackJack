@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <random>
 using namespace std;
 
 namespace CARD
@@ -131,16 +132,97 @@ public:
 	
 	char getShape() {
 		char shape;
-		
-		if (shp == 1)
-			shape = 'D';
-		else if (shp == 2)
-			shape = 'S';
-		else if (shp == 3)
-			shape = 'H';
-		else if (shp == 4)
-			shape = 'C';
-		
+		if(number > 10){
+			if (shp == 1){
+				shape = 'D';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ◆        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<(char)number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ◇ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+			else if (shp == 2){
+				shape = 'S';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ♠        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<(char)number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ♤ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+			else if (shp == 3){
+				shape = 'H';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ♥        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<(char)number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ♡ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+			else if (shp == 4){
+				shape = 'C';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ♣        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<(char)number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ♧ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+		} else {
+			if (shp == 1){
+				shape = 'D';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ◆        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ◇ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+			else if (shp == 2){
+				shape = 'S';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ♠        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ♤ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+			else if (shp == 3){
+				shape = 'H';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ♥        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ♡ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+			else if (shp == 4){
+				shape = 'C';
+				cout<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+				cout<<"| ♣        |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|    "<<number<<"     |"<<endl;
+				cout<<"|          |"<<endl;
+				cout<<"|       ♧ |"<<endl;
+				cout<<" ㅡㅡㅡㅡㅡ"<<endl;
+			}
+		}
 		return shape;
 	}
 	
@@ -169,12 +251,15 @@ public:
 		int right;
 		
 		for (int i = 0; i < 100; i++) {
-			srand(time(NULL));
-			left = rand() % CARD::CARDNUMBER;
-			right = rand() % CARD::CARDNUMBER;
-			temp = cards[left];
-			cards[left] = cards[right];
-			cards[right] = temp;
+			unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+			shuffle(cards.begin(), cards.end(), std::default_random_engine(seed));
+			
+//			srand(time(NULL));
+//			left = rand() % CARD::CARDNUMBER;
+//			right = rand() % CARD::CARDNUMBER;
+//			temp = cards[left];
+//			cards[left] = cards[right];
+//			cards[right] = temp;
 		}
 	}
 	

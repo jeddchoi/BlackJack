@@ -10,10 +10,9 @@ protected:
 	int num; // 등록순 인덱스
 	string name; // 플레이어 이름
 	double balance; // 잔고
-	double winingRate; // 승률
 	
 public:
-	Player(int num, string name, double balance, double rate) : num(num), name(name), balance(balance), winingRate(rate)
+	Player(int num, string name, double balance) : num(num), name(name), balance(balance)
 	{}
 	
 	Player()
@@ -33,10 +32,6 @@ public:
 	{
 		return balance;
 	}
-	double getRate() const
-	{
-		return winingRate;
-	}
 	
 	void setBalance(double money)
 	{
@@ -48,11 +43,10 @@ public:
 		this->name = who.name;
 		this->num = who.num;
 		this->balance = who.balance;
-		this->winingRate = who.winingRate;
 	}
 	void showPlayerInfo()
 	{
-		cout<<"플레이어 이름 : "<<this->name<<" 잔고 : "<< this->balance <<" 승률 : "<< this->winingRate <<endl;
+		cout<<"플레이어 이름 : "<<this->name<<" 잔고 : "<< this->balance<<endl;
 	}
 };
 
@@ -73,11 +67,9 @@ protected:
 	double Sum;
 	double insurance;
 	
-	double accMinus;
-	double accPlus;
 	
 public:
-	GamePlayer(int num, string name, double balance, double rate) : Player(num, name, balance, rate)
+	GamePlayer(int num, string name, double balance) : Player(num, name, balance)
 	{}
 	GamePlayer() : Player()
 	{}
@@ -123,14 +115,6 @@ public:
 	{
 		return this->Starting_balance;
 	}
-	double getAccMinus()
-	{
-		return 0;
-	}
-	double getAccPlus()
-	{
-		return 0;
-	}
 	
 	void drawTwoCards(Deck &deck)
 	{
@@ -145,15 +129,11 @@ public:
 	
 	void showFirstTwoCards()
 	{
-		int tmp = Hand[0].getNumber();
-		if(tmp  > 10)
-			cout<<"player's shape : "<<Hand[0].getShape()<<" player's number : "<<(char)tmp<<endl;
-		else cout<<"player's shape : "<<Hand[0].getShape()<<" player's number : "<<tmp<<endl;
-		
-		tmp = Hand[1].getNumber();
-		if(tmp > 10)
-			cout<<"player's shape : "<<Hand[1].getShape()<<" player's number : "<<(char)tmp<<endl;
-		else cout<<"player's shape : "<<Hand[1].getShape()<<" player's number : "<<tmp<<endl;
+		cout<<"[ Player ]"<<endl;
+		Hand[0].getShape();
+		Hand[1].getShape();
+		cout<<"[ "<<getSum(Hand)<<" ]"<<endl;
+		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
 	
 	double getCardSum()
@@ -180,15 +160,13 @@ public:
 	}
 	
 	void showHand(){
-		int tmp=0;
+		cout<<"[ Player ]"<<endl;
 		vector<Card>::iterator i;
 		for(i=Hand.begin(); i != Hand.end(); i++){
-			tmp = (*i).getNumber();
-			if(tmp > 10)
-				cout<<"player's shape : "<<(*i).getShape()<<" player's number : "<<(char)tmp<<endl;
-			else
-				cout<<"player's shape : "<<(*i).getShape()<<" player's number : "<<tmp<<endl;
+			(*i).getShape();
 		}
+		cout<<"[ "<<getSum(Hand)<<" ]"<<endl;
+		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
 };
 
@@ -199,18 +177,10 @@ class Dealer : public GamePlayer
 public:
 	
 	void showOpenCard(){
-		int tmp = Hand[1].getNumber();
-		if(tmp > 10)
-			cout<<"dealer's shape : "<<Hand[1].getShape()<<" dealer's number : "<<(char)tmp<<endl;
-		else cout<<"dealer's shape : "<<Hand[1].getShape()<<" dealer's number : "<<tmp<<endl;
-	}
-	
-	void revealRestCard()
-	{
-		int tmp = Hand[0].getNumber();
-		if(tmp > 10)
-			cout<<"dealer's shape : "<<Hand[0].getShape()<<" dealer's number : "<<(char)tmp<<endl;
-		else cout<<"dealer's shape : "<<Hand[0].getShape()<<" dealer's number : "<<tmp<<endl;
+		cout<<"[ Dealer ]"<<endl;
+		Hand[1].getShape();
+		cout<<"[ "<<Hand[1].getValue()<<" ]"<<endl;
+		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
 	
 	bool isOpenCardAce(){
@@ -221,15 +191,12 @@ public:
 	}
 	
 	void showHand(){
-		int tmp=0;
+		cout<<"[ Dealer ]"<<endl;
 		vector<Card>::iterator i;
 		for(i=Hand.begin(); i != Hand.end(); i++){
-			tmp = (*i).getNumber();
-			if(tmp > 10)
-				cout<<"dealer's shape : "<<(*i).getShape()<<" dealer's number : "<<(char)tmp<<endl;
-			else
-				cout<<"dealer's shape : "<<(*i).getShape()<<" dealer's number : "<<tmp<<endl;
+			(*i).getShape();
 		}
+		cout<<"[ "<<getSum(Hand)<<" ]"<<endl;
+		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
 	}
-	
 };
