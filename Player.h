@@ -12,51 +12,24 @@ protected:
 	double balance; // 잔고
 	
 public:
-	Player(int num, string name, double balance) : num(num), name(name), balance(balance)
-	{}
+	Player(int num, string name, double balance);
 	
-	Player()
-	{}
-	~Player()
-	{}
+	Player();
+	~Player();
 	
-	int getNum() const
-	{
-		return num;
-	}
-	string getName() const
-	{
-		return name;
-	}
-	double getBalance() const
-	{
-		return balance;
-	}
+	int getNum() const;
+	string getName() const;
+	double getBalance() const;
 	
-	void setBalance(double money)
-	{
-		balance += money;
-	}
+	void setBalance(double money);
 	
-	void setPlayer(Player who)
-	{
-		this->name = who.name;
-		this->num = who.num;
-		this->balance = who.balance;
-	}
-	void showPlayerInfo()
-	{
-		cout<<"플레이어 이름 : "<<this->name<<" 잔고 : "<< this->balance<<endl;
-	}
+	void setPlayer(Player who);
+	void showPlayerInfo();
 };
 
-bool cmpNum(const Player &a, const Player &b){
-	return a.getNum() < b.getNum();
-}
+bool cmpNum(const Player &a, const Player &b);
 
-bool cmpBalance(const Player &a, const Player &b){
-	return a.getBalance() > b.getBalance();
-}
+bool cmpBalance(const Player &a, const Player &b);
 
 class GamePlayer : public Player
 {
@@ -69,160 +42,52 @@ protected:
 	
 	
 public:
-	GamePlayer(int num, string name, double balance) : Player(num, name, balance)
-	{}
-	GamePlayer() : Player()
-	{}
-	~GamePlayer()
-	{}
+	GamePlayer(int num, string name, double balance);
+	GamePlayer() ;
+	~GamePlayer();
 	
-	bool canBet(int money)
-	{
-		if(this->balance >= money){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
+	bool canBet(int money);
 	
 	
-	double getBet()
-	{
-		return this->Bet;
-	}
+	double getBet();
 	
-	void setInsurance(double insurance){
-		this->insurance = insurance;
-	}
+	void setInsurance(double insurance);
 	
-	double getInsurance(){
-		return this->insurance;
-	}
+	double getInsurance();
 	
-	void plusBet(int money)
-	{
-		this->balance -= money;
-		this->Bet += money;
-	}
+	void plusBet(int money);
 	
-	void setStartingBalance()
-	{
-		this->Starting_balance = this->balance;
-		this->balance -= this->Bet;
-	}
+	void setStartingBalance();
 	
-	double getStartingBalance()
-	{
-		return this->Starting_balance;
-	}
+	double getStartingBalance();
 	
-	void drawTwoCards(Deck &deck)
-	{
-		(this->Hand).push_back(deck.getACard());
-		(this->Hand).push_back(deck.getACard());
-	}
+	void drawTwoCards(Deck &deck);
 	
-	void drawACard(Deck &deck)
-	{
-		(this->Hand).push_back(deck.getACard());
-	}
+	void drawACard(Deck &deck);
 	
-	void showFirstTwoCards()
-	{
-		cout<<"[ Player ]"<<endl;
-		Hand[0].getShape();
-		Hand[1].getShape();
-		cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
-		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
-	}
+	void showFirstTwoCards();
 	
-	double getCardSum()
-	{
-		this->Sum = getSum<int>(Hand);
-		return this->Sum;
-	}
+	double getCardSum();
 	
-	void initGame(){
-		this->Bet = 0;
-		(this->Hand).clear();
-	}
+	void initGame();
 	
-	bool isFirstCardsBJ()
-	{
-		this->Sum = getSum<int>(Hand);
-		if(Sum == 21)
-		{
-			return true;
-		}else
-		{
-			return false;
-		}
-	}
+	bool isFirstCardsBJ();
 	
-	void showHand(){
-		cout<<"[ Player ]"<<endl;
-		vector<Card>::iterator i;
-		for(i=Hand.begin(); i != Hand.end(); i++){
-			(*i).getShape();
-		}
-		cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
-		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
-	}
+	void showHand();
 };
 
 // 딜러 카드의 합과 플레이어 카드의 합 비교
-bool operator>(GamePlayer& p1, GamePlayer& p2)
-{
-	int sum1 = p1.getCardSum();
-	int sum2 = p2.getCardSum();
-	
-	if(sum1 < sum2)
-		return false;
-	else if(sum1 > sum2)
-		return true;
-	else
-		return false;
-}
+bool operator>(GamePlayer& p1, GamePlayer& p2);
 
-bool operator==(GamePlayer& p1, GamePlayer& p2)
-{
-	int sum1 = p1.getCardSum();
-	int sum2 = p2.getCardSum();
-	
-	if(sum1 < sum2)
-		return false;
-	else if(sum1 > sum2)
-		return false;
-	else
-		return true;
-}
+bool operator==(GamePlayer& p1, GamePlayer& p2);
 
 class Dealer : public GamePlayer
 {
 public:
 	
-	void showOpenCard(){
-		cout<<"[ Dealer ]"<<endl;
-		Hand[1].getShape();
-		cout<<"[ "<<Hand[1].getValue()<<" ]"<<endl;
-		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
-	}
+	void showOpenCard();
 	
-	bool isOpenCardAce(){
-		if(Hand[1].getNumber() == 'A')
-			return true;
-		else
-			return false;
-	}
+	bool isOpenCardAce();
 	
-	void showHand(){
-		cout<<"[ Dealer ]"<<endl;
-		vector<Card>::iterator i;
-		for(i=Hand.begin(); i != Hand.end(); i++){
-			(*i).getShape();
-		}
-		cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
-		cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
-	}
+	void showHand();
 };
