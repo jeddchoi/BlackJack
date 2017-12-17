@@ -910,7 +910,9 @@ public:
 			currentPlayer.initGame(); // 카드와 베팅금액을 비운다.
 			Computer.initGame(); // 카드를 비운다.
 			player_draw = 0;
-			doBetting(); // player는 베팅을 한다.
+			if(!doBetting()) // player는 베팅을 한다.
+				break;
+			
 			int first_result = getTwoCards();
 			
 //			showFirstCards();

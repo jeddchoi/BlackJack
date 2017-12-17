@@ -22,7 +22,7 @@
 int main()
 {
 	BlackJack BJ;
-	char menu;
+	string menu;
 	
 	cout<<"Welcome to BlackJACK"<<endl;
 	cout<<endl;
@@ -36,10 +36,13 @@ int main()
 			cin>>menu;
 			cin.ignore();
 			
-			if(!isalpha(menu))
+			if(menu.size() > 1 || !isalpha(menu[0]))
 				throw menu;
 			
-			switch (menu) {
+			char cstr[2];
+			strcpy(cstr,menu.c_str());
+			
+			switch (cstr[0]) {
 				case 'R': // 새로운 플레이어 등록
 				case 'r': // 새로운 플레이어 등록
 					BJ.addNewPlayer();
@@ -69,7 +72,7 @@ int main()
 			}
 			break;
 		}
-		catch(char exception)
+		catch(string exception)
 		{
 			cout<<"Please Try Again."<<endl;
 			cin.clear();
