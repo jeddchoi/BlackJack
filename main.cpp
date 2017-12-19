@@ -24,7 +24,7 @@ int main()
 	BlackJack BJ;
 	string menu;
 	
-	cout<<"Welcome to BlackJACK"<<endl;
+	cout<<"-=-=-=-=-=-=-=-=-=-=- Welcome to BlackJACK -=-=-=-=-=-=-=-=-=-=-"<<endl;
 	cout<<endl;
 	while(1)
 	{
