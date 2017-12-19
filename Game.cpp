@@ -492,30 +492,31 @@ int BlackJack::doPlayerTurn()
 			if(!isalpha(response))
 				throw response;
 			
-			switch (response) {
-					// STAY
-				case 'S':
-				case 's':
-					result = 1; // STAY
-					break;
-					// HIT
-				case 'H':
-				case 'h':
-					currentPlayer.drawACard(deck);
-					player_draw++;
-					currentPlayer.showHand();
-					if(currentPlayer.getCardSum() > 21)
-					{
-						result = 5; // BURST
+			if(player_draw == 1)
+			{
+				switch (response) {
+						// STAY
+					case 'S':
+					case 's':
+						result = 1; // STAY
 						break;
-					}
-					else
-					{
-						continue;
-					}
+						// HIT
+					case 'H':
+					case 'h':
+						currentPlayer.drawACard(deck);
+						player_draw++;
+						currentPlayer.showHand();
+						if(currentPlayer.getCardSum() > 21)
+						{
+							result = 5; // BURST
+							break;
+						}
+						else
+						{
+							continue;
+						}
+						
 					
-				if(player_draw == 1)
-				{
 						// DOUBLE DOWN
 					case 'D':
 					case 'd':
@@ -544,9 +545,37 @@ int BlackJack::doPlayerTurn()
 					case 'g':
 						result = 6;
 						break;
+				
+					default:
+						continue;
 				}
-				default:
-					continue;
+			}
+			else
+			{
+				switch (response) {
+						// STAY
+					case 'S':
+					case 's':
+						result = 1; // STAY
+						break;
+						// HIT
+					case 'H':
+					case 'h':
+						currentPlayer.drawACard(deck);
+						player_draw++;
+						currentPlayer.showHand();
+						if(currentPlayer.getCardSum() > 21)
+						{
+							result = 5; // BURST
+							break;
+						}
+						else
+						{
+							continue;
+						}
+					default:
+						continue;
+				}
 			}
 			break;
 		}
