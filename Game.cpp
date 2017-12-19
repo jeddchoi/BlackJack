@@ -883,13 +883,13 @@ void BlackJack::startGame()
 				wannaNextStage();
 				if(wannaEvenMoney()) // 이븐 머니 한다면
 				{
-					printf("이븐 머니하겠다.\n");
+					printf("You chose to even money.\n");
 					Computer.showHand(); // 딜러의 히든 카드를 보여줌
 					getResult(2); // 2번 결과로 처리
 				}
 				else
 				{
-					printf("이븐 머니하지 않겠다.\n");
+					printf("You didn't choose to even money.\n");
 					Computer.showHand(); // 딜러의 히든 카드를 보여줌
 					if(Computer.isFirstCardsBJ()) // 딜러가 블랙잭이면
 						getResult(3); // 3번 결과로 처리
@@ -901,7 +901,7 @@ void BlackJack::startGame()
 				wannaNextStage();
 				if(wannaInsurance())
 				{
-					printf("인슈런스하겠다.\n");
+					printf("You chose to put insurance.\n");
 					after_player = doPlayerTurn();
 					if(after_player == 1) // 플레이어가 stay한 경우
 					{
@@ -925,7 +925,7 @@ void BlackJack::startGame()
 				else // 인슈런스 하지 않겠다.
 				{
 					wannaNextStage();
-					printf("인슈런스하지 않겠다.\n");
+					printf("You didn't choose to put insurance. \n");
 					after_player = doPlayerTurn();
 					if(after_player == 1) // 플레이어가 stay해서 비교해야함
 					{
@@ -987,7 +987,9 @@ void BlackJack::startGame()
 		if(wannaRestart())
 		{
 			cont = true;
-			cout<<"다시 시작합니다..."<<endl;
+			cout<<endl;
+			cout<<"Let's do it again!"<<endl;
+			cout<<endl;
 		}
 		else
 			cont = false;

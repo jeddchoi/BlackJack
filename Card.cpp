@@ -189,7 +189,7 @@ Card Deck::getACard() {
 		card.Card::setCard(card.cardName);
 	}
 	else {
-		cout << "There is no cards." << endl;
+		cout << "There are no cards." << endl;
 		exit(-1);
 	}
 	return card;

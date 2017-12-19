@@ -37,7 +37,7 @@ void Player::setPlayer(Player who)
 }
 void Player::showPlayerInfo()
 {
-	cout<<"플레이어 이름 : "<<this->name<<" 잔고 : "<< this->balance<<endl;
+	cout<<"Player Name : "<<this->name<<" Balance : "<< this->balance<<endl;
 }
 
 
@@ -114,7 +114,7 @@ void GamePlayer::showFirstTwoCards()
 	Hand[0].getShape();
 	Hand[1].getShape();
 	cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
-	cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
 }
 
 double GamePlayer::getCardSum()
@@ -147,7 +147,7 @@ void GamePlayer::showHand(){
 		(*i).getShape();
 	}
 	cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
-	cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
 }
 
 
@@ -182,7 +182,7 @@ void Dealer::showOpenCard(){
 	cout<<"[ Dealer ]"<<endl;
 	Hand[1].getShape();
 	cout<<"[ "<<Hand[1].getValue()<<" ]"<<endl;
-	cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
 }
 
 bool Dealer::isOpenCardAce(){
@@ -199,5 +199,5 @@ void Dealer::showHand(){
 		(*i).getShape();
 	}
 	cout<<"[ "<<getSum<int>(Hand)<<" ]"<<endl;
-	cout<<"ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ"<<endl;
+	cout<<"-----------------------------------------------------------------"<<endl;
 }
