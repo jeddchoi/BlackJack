@@ -406,7 +406,7 @@ int BlackJack::getTwoCards()
 {
 	currentPlayer.drawTwoCards(deck);
 	Computer.drawTwoCards(deck);
-	player_draw++;
+	player_draw = 1;
 	
 	if(Computer.isOpenCardAce())
 	{
@@ -514,38 +514,37 @@ int BlackJack::doPlayerTurn()
 						continue;
 					}
 					
-					// DOUBLE DOWN
-				case 'D':
-				case 'd':
-					if(currentPlayer.canBet(currentPlayer.getBet() *2))
-						currentPlayer.plusBet(currentPlayer.getBet());
-					else
-					{
-						cout<<"You don't have enough money."<<endl;
-						continue;
-					}
-					currentPlayer.drawACard(deck);
-					player_draw++;
-					currentPlayer.showHand();
-					if(currentPlayer.getCardSum() > 21)
-					{
-						result = 5; //BURST
-						break;
-					}
-					else
-					{
-						result = 1;
-						break;
-					}
-					
-					// SURRENDER if
-					if(player_draw == 1)
-					{
+				if(player_draw == 1)
+				{
+						// DOUBLE DOWN
+					case 'D':
+					case 'd':
+						if(currentPlayer.canBet(currentPlayer.getBet() *2))
+							currentPlayer.plusBet(currentPlayer.getBet());
+						else
+						{
+							cout<<"You don't have enough money."<<endl;
+							continue;
+						}
+						currentPlayer.drawACard(deck);
+						player_draw++;
+						currentPlayer.showHand();
+						if(currentPlayer.getCardSum() > 21)
+						{
+							result = 5; //BURST
+							break;
+						}
+						else
+						{
+							result = 1;
+							break;
+						}
+						// SURRENDER
 					case 'G':
 					case 'g':
-						result = 6; // SURRENDER
+						result = 6;
 						break;
-					}
+				}
 				default:
 					continue;
 			}
@@ -880,7 +879,6 @@ void BlackJack::startGame()
 		switch (first_result)
 		{
 			case 1:
-				wannaNextStage();
 				if(wannaEvenMoney()) // 이븐 머니 한다면
 				{
 					printf("You chose to even money.\n");
@@ -898,7 +896,6 @@ void BlackJack::startGame()
 				}
 				break;
 			case 2:
-				wannaNextStage();
 				if(wannaInsurance())
 				{
 					printf("You chose to put insurance.\n");
@@ -924,7 +921,6 @@ void BlackJack::startGame()
 				}
 				else // 인슈런스 하지 않겠다.
 				{
-					wannaNextStage();
 					printf("You didn't choose to put insurance. \n");
 					after_player = doPlayerTurn();
 					if(after_player == 1) // 플레이어가 stay해서 비교해야함
