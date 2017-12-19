@@ -1,4 +1,5 @@
 #include "Card.h"
+
 using namespace std;
 
 
@@ -167,8 +168,12 @@ Deck::~Deck() {};
 
 void Deck::shuffleDeck()
 {
-	unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
-	shuffle(cards.begin(), cards.end(), std::default_random_engine(seed));
+//	unsigned seed = (unsigned)std::chrono::system_clock::now().time_since_epoch().count();
+//	random_shuffle(cards.begin(), cards.end(), std::default_random_engine(seed));
+	std::random_device rd;
+	std::mt19937 g(rd());
+	
+	std::shuffle(cards.begin(), cards.end(), g);
 }
 
 int Deck::getRemainCardsNum() {

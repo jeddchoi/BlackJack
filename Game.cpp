@@ -81,7 +81,7 @@ void Game::showIntro()
 	
 	printLine();
 	
-	cout<<"Whick menu are you going to choose? : ";
+	cout<<"Which menu are you going to choose? : ";
 }
 
 // 플레이어의 인덱스를 반환하고 없으면 -1반환

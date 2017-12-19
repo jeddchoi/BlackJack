@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <random>
+#include <algorithm>
+#include <iterator>
 using namespace std;
 
 namespace CARD
