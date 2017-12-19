@@ -76,7 +76,7 @@ void Game::showIntro()
 	cout<<"2. Game start if you have registered.(G or g)"<<endl;
 	cout<<"3. Show players status.(S or s)"<<endl;
 	cout<<"4. Charge your money.(C or c)"<<endl;
-	cout<<"5. Information : How to game and Who make this game.(I or i)"<<endl;
+	cout<<"5. Information : Who made this game.(I or i)"<<endl;
 	cout<<"6. End game.(E or e)"<<endl;
 	
 	printLine();
@@ -981,7 +981,7 @@ void BlackJack::startGame()
 				}
 				else
 				{
-					getResult(after_dealer);
+					getResult(1);
 				}
 				break;
 			case 4:
